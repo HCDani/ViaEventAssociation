@@ -9,6 +9,7 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Events.Values
 {
     public record Description
     {
+        public static readonly Description Default = new("");
         public string Value { get; private set; }
         private Description(string value)
         {

@@ -20,8 +20,8 @@ namespace UnitTests.Features.Event
             // Arrange S1
             EventId id = EventId.Create(Guid.NewGuid()).payLoad;
             Title title = Title.Create("Event Title").payLoad;
-            Status status = Status.Create(Status.StatusEnum.Draft).payLoad;
-            VEvent vEvent = VEvent.Create(id, title, status);
+            VEvent vEvent = VEvent.Create(id, Status.Draft);
+            vEvent.UpdateTitle(title);
             // Act S1
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
 
@@ -39,10 +39,10 @@ namespace UnitTests.Features.Event
 
             // Arrange S3
             vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(5).payLoad);
-            vEvent.UpdateVisibility(Visibility.Create(Visibility.VisibilityEnum.Private).payLoad);
+            vEvent.UpdateVisibility(Visibility.Private);
             vEvent.UpdateDescription(Description.Create("").payLoad);
             vEvent.UpdateLocationId(new LocationId(Guid.NewGuid()));
-            Result<Status> resultStatus = vEvent.UpdateStatus(Status.Create(Status.StatusEnum.Ready).payLoad);
+            Result<Status> resultStatus = vEvent.UpdateStatus(Status.Ready);
 
             Assert.Equal(0, resultStatus.resultCode);
 
@@ -51,7 +51,7 @@ namespace UnitTests.Features.Event
             // Assert S3
             Assert.Equal(new DateTime(2026, 03, 21, 12, 0, 0), vEvent.Duration.From);
             Assert.Equal(new DateTime(2026, 03, 21, 16, 30, 0), vEvent.Duration.To);
-            Assert.Equal(Status.StatusEnum.Draft, vEvent.Status.Value);
+            Assert.Equal(Status.Draft, vEvent.Status);
 
             // Arrange S4
             // Act S4
@@ -126,9 +126,9 @@ namespace UnitTests.Features.Event
 
             // This ended up in the end, because the cancelled status forbids any other changes.
             // Arrange F7
-            Result<Status> resultStatusF7A = vEvent.UpdateStatus(Status.Create(Status.StatusEnum.Ready).payLoad);
+            Result<Status> resultStatusF7A = vEvent.UpdateStatus(Status.Ready);
             Assert.Equal(0, resultStatusF7A.resultCode);
-            Result<Status> resultStatusF7B = vEvent.UpdateStatus(Status.Create(Status.StatusEnum.Active).payLoad);
+            Result<Status> resultStatusF7B = vEvent.UpdateStatus(Status.Active);
             Assert.Equal(0, resultStatusF7B.resultCode);
 
             // Act F7
@@ -140,7 +140,7 @@ namespace UnitTests.Features.Event
             Assert.Equal(new DateTime(2026, 03, 21, 01, 0, 0), vEvent.Duration.To);
 
             // Arrange F8
-            Result<Status> resultStatusF8 = vEvent.UpdateStatus(Status.Create(Status.StatusEnum.Cancelled).payLoad);
+            Result<Status> resultStatusF8 = vEvent.UpdateStatus(Status.Cancelled);
             Assert.Equal(0, resultStatusF8.resultCode);
 
             // Act F8

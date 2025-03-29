@@ -20,9 +20,7 @@ namespace UnitTests.Features.Event
         {
             // Arrange S1
             EventId id = EventId.Create(Guid.NewGuid()).payLoad;
-            Title title = Title.Create("Event Title").payLoad;
-            Status status = Status.Create(Status.StatusEnum.Draft).payLoad;
-            VEvent vEvent = VEvent.Create(id, title, status);
+            VEvent vEvent = VEvent.Create(id, Status.Draft);
 
             // Act S1
             vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
@@ -38,12 +36,10 @@ namespace UnitTests.Features.Event
             Assert.Equal("", vEvent.Description.Value);
 
             // Arrange S3
-            vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(5).payLoad);
-            vEvent.UpdateVisibility(Visibility.Create(Visibility.VisibilityEnum.Private).payLoad);
-            vEvent.UpdateDescription(Description.Create("").payLoad);
+            vEvent.UpdateTitle(Title.Create("Event Title").payLoad);
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEvent.UpdateLocationId(new LocationId(Guid.NewGuid()));
-            Result<Status> resultStatus = vEvent.UpdateStatus(Status.Create(Status.StatusEnum.Ready).payLoad);
+            Result<Status> resultStatus = vEvent.UpdateStatus(Status.Ready);
 
             Assert.Equal(0, resultStatus.resultCode);
 
@@ -52,7 +48,7 @@ namespace UnitTests.Features.Event
 
             // Assert S3
             Assert.Equal("Nullam tempor lacus nisl, eget tempus", vEvent.Description.Value);
-            Assert.Equal(Status.StatusEnum.Draft, vEvent.Status.Value);
+            Assert.Equal(Status.Draft, vEvent.Status);
 
             // Arrange F1
             // Act F1
@@ -62,10 +58,10 @@ namespace UnitTests.Features.Event
 
             // Arrange F2
 
-            Assert.Equal(Status.StatusEnum.Draft, vEvent.Status.Value);
-            Result<Status> resultStatusF2 = vEvent.UpdateStatus(Status.Create(Status.StatusEnum.Ready).payLoad);
+            Assert.Equal(Status.Draft, vEvent.Status);
+            Result<Status> resultStatusF2 = vEvent.UpdateStatus(Status.Ready);
             Assert.Equal(0, resultStatusF2.resultCode);
-            Result<Status> resultStatusF2A = vEvent.UpdateStatus(Status.Create(Status.StatusEnum.Active).payLoad);
+            Result<Status> resultStatusF2A = vEvent.UpdateStatus(Status.Active);
             Assert.Equal(0, resultStatusF2A.resultCode);
 
             // Act F2
@@ -76,7 +72,7 @@ namespace UnitTests.Features.Event
             Assert.Equal("Nullam tempor lacus nisl, eget tempus", vEvent.Description.Value);
 
             // Arrange F3
-            Result<Status> resultStatusF3 = vEvent.UpdateStatus(Status.Create(Status.StatusEnum.Cancelled).payLoad);
+            Result<Status> resultStatusF3 = vEvent.UpdateStatus(Status.Cancelled);
             Assert.Equal(0, resultStatusF3.resultCode);
 
             // Act F3

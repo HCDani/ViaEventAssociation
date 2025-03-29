@@ -1,88 +1,88 @@
 ﻿# Use Cases
 
 ## UC1 - The creator creates a new empty event
-- [ ] value - EventId
-    - [ ] S1
-    - [ ] S2
-    - [ ] S3
-    - [ ] S4
+- [ x ] value - EventId
+    - [ x ] S1
+    - [ x ] S2
+    - [ x ] S3
+    - [ x ] S4
 
 ## UC2 - The creator updates the title of an existing event
-- [ ] value - EventTitle
-    - [ ] S1
-    - [ ] S2
-- [ ] failure
-    - [ ] F1
-    - [ ] F2
-    - [ ] F3
-    - [ ] F4
-    - [ ] F5
-    - [ ] F6
+- [ x ] value - EventTitle
+    - [ x ] S1
+    - [ x ] S2
+- [ x ] failure
+    - [ x ] F1
+    - [ x ] F2
+    - [ x ] F3
+    - [ x ] F4
+    - [ x ] F5
+    - [ x ] F6
 
 ## UC3 - The creator updates the description of an event
-- [ ] value - EventDescription
-    - [ ] S1
-    - [ ] S2
-    - [ ] S3
-- [ ] failure
-    - [ ] F1
-    - [ ] F2
-    - [ ] F3
+- [ x ] value - EventDescription
+    - [ x ] S1
+    - [ x ] S2
+    - [ x ] S3
+- [ x ] failure
+    - [ x ] F1
+    - [ x ] F2
+    - [ x ] F3
 
 ## UC4 - The creator updates the start and end time of the event
-- [ ] value - EventTimes
-    - [ ] S1
-    - [ ] S2
-    - [ ] S3
-    - [ ] S4
-    - [ ] S5
-- [ ] failure
-    - [ ] F1
-    - [ ] F2
-    - [ ] F3
-    - [ ] F4
-    - [ ] F5
-    - [ ] F6
-    - [ ] F7
-    - [ ] F8
-    - [ ] F9
-    - [ ] F10
-    - [ ] F11
+- [ x ] value - EventTimes
+    - [ x ] S1
+    - [ x ] S2
+    - [ x ] S3
+    - [ x ] S4
+    - [ x ] S5
+- [ x ] failure
+    - [ x ] F1
+    - [ x ] F2
+    - [ x ] F3
+    - [ x ] F4
+    - [ x ] F5
+    - [ x ] F6
+    - [ x ] F7
+    - [ x ] F8
+    - [ x ] F9
+    - [ x ] F10
+    - [ x ] F11
 
 ## UC5 - The creator makes the event public
-- [ ] value - Public
-    - [ ] S1
-- [ ] failure
-    - [ ] F1
+- [ x ] value - Public
+    - [ x ] S1
+- [ x ] failure
+    - [ x ] F1
 
 ## UC6 - The creator makes the event private
-- [ ] value - Private
-    - [ ] S1
-    - [ ] S2
-- [ ] failure
-    - [ ] F1
-    - [ ] F2
+- [ x ] value - Private
+    - [ x ] S1
+    - [ x ] S2
+- [ x ] failure
+    - [ x ] F1
+    - [ x ] F2
 
 ## UC7 - The creator sets maximum number of guests
-- [ ] value - MaxGuests
-    - [ ] S1
-    - [ ] S2
-    - [ ] S3
-- [ ] failure
-    - [ ] F1
-    - [ ] F2
+- [ x ] value - MaxGuests
+    - [ x ] S1
+    - [ x ] S2
+    - [ x ] S3
+- [ x ] failure
+    - [ x ] F1
+    - [ x ] F2
     - [ ] F3
-    - [ ] F4
-    - [ ] F5
+    - [ x ] F4
+    - [ x ] F5
 
 ## UC8 - The creator readies an event
-- [ ] value - ReadyStatus
-    - [ ] S1
-- [ ] failure
-    - [ ] F1
-    - [ ] F2
-    - [ ] F3
-    - [ ] F4
+- [ x ] value - ReadyStatus
+    - [ x ] S1
+- [ x ] failure
+    - [ x ] F1
+    - [ x ] F2
+    - [  ] F3
+    - [  ] F4
 
 ## UC9 - The creator activates an event
 - [ ] value - ActiveStatus

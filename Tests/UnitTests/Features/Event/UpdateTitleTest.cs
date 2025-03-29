@@ -19,24 +19,19 @@ namespace UnitTests.Features.Event
         {
             // Arrange S1
             EventId id = EventId.Create(Guid.NewGuid()).payLoad;
-            Title title = Title.Create("Event Title").payLoad;
-            Status status = Status.Create(Status.StatusEnum.Draft).payLoad;
-            VEvent vEvent = VEvent.Create(id, title, status);
+            VEvent vEvent = VEvent.Create(id, Status.Draft);
 
             // Act S1
             vEvent.UpdateTitle(Title.Create("Scary Movie Night!").payLoad);
 
             // Assert S1
             Assert.Equal("Scary Movie Night!", vEvent.Title.Value);
-            Assert.Equal(Status.StatusEnum.Draft, vEvent.Status.Value);
+            Assert.Equal(Status.Draft, vEvent.Status);
 
             // Arrange S2
-            vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(5).payLoad);
-            vEvent.UpdateVisibility(Visibility.Create(Visibility.VisibilityEnum.Private).payLoad);
-            vEvent.UpdateDescription(Description.Create("").payLoad);
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31,9,0,0), new DateTime(2026, 10, 31,11,11,11)).payLoad);
             vEvent.UpdateLocationId(new LocationId(Guid.NewGuid()));
-            Result<Status> resultStatus = vEvent.UpdateStatus(Status.Create(Status.StatusEnum.Ready).payLoad);
+            Result<Status> resultStatus = vEvent.UpdateStatus(Status.Ready);
 
             Assert.Equal(0, resultStatus.resultCode);
 
@@ -45,7 +40,7 @@ namespace UnitTests.Features.Event
 
             //Assert S2
             Assert.Equal("Graduation Gala", vEvent.Title.Value);
-            Assert.Equal(Status.StatusEnum.Draft, vEvent.Status.Value);
+            Assert.Equal(Status.Draft, vEvent.Status);
 
             // Arrange F1
             // Act F1
@@ -77,9 +72,9 @@ namespace UnitTests.Features.Event
             Assert.Equal(10, vEvent.UpdateTitle(null).resultCode);
 
             // Arrange F5
-            Result<Status> resultStatusF5 = vEvent.UpdateStatus(Status.Create(Status.StatusEnum.Ready).payLoad);
+            Result<Status> resultStatusF5 = vEvent.UpdateStatus(Status.Ready);
             Assert.Equal(0, resultStatusF5.resultCode);
-            Result<Status> resultStatusF5A = vEvent.UpdateStatus(Status.Create(Status.StatusEnum.Active).payLoad);
+            Result<Status> resultStatusF5A = vEvent.UpdateStatus(Status.Active);
             Assert.Equal(0, resultStatusF5A.resultCode);
 
             // Act F5
@@ -90,7 +85,7 @@ namespace UnitTests.Features.Event
             Assert.Equal("Graduation Gala",vEvent.Title.Value);
 
             // Arrange F6
-            Result<Status> resultStatusF6 = vEvent.UpdateStatus(Status.Create(Status.StatusEnum.Cancelled).payLoad);
+            Result<Status> resultStatusF6 = vEvent.UpdateStatus(Status.Cancelled);
             Assert.Equal(0, resultStatusF6.resultCode);
 
             // Act F6

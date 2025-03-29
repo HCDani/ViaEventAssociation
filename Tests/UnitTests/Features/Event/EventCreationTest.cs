@@ -15,22 +15,29 @@ namespace UnitTests.Features.Event
         [Fact]
         public void CreateEvent_WithValidData()
         {
+            // Arrange S1
             EventId id = EventId.Create(Guid.NewGuid()).payLoad;
-            Title title = Title.Create("Event Title").payLoad;
-            Status status = Status.Create(Status.StatusEnum.Draft).payLoad;
-            // Arrange
-            VEvent vEvent = VEvent.Create(id, title, status);
-
-            // Act
-            vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(5).payLoad);
-            vEvent.UpdateVisibility(Visibility.Create(Visibility.VisibilityEnum.Private).payLoad);
-            vEvent.UpdateDescription(Description.Create("").payLoad);
-
-            // Assert
-            Assert.Equal(Status.StatusEnum.Draft, vEvent.Status.Value);
+            // Act S1
+            VEvent vEvent = VEvent.Create(id, Status.Draft);
+            // Assert S1
+            Assert.Equal(Status.Draft, vEvent.Status);
             Assert.Equal(5, vEvent.MaxNumberOfGuests.Value);
-            Assert.Equal(Visibility.VisibilityEnum.Private, vEvent.Visibility.Value);
-            Assert.Equal("", vEvent.Description.Value);
+
+            // Arrange S2
+            // Act S2
+            // Assert S2
+            Assert.Equal(Title.Default.Value, vEvent.Title.Value);
+
+            // Arrange S3
+            // Act S3
+            // Assert S3
+            Assert.Equal(Description.Default.Value, vEvent.Description.Value);
+
+            // Arrange S4
+            // Act S4
+            // Assert S4
+            Assert.Equal(Visibility.Private, vEvent.Visibility);
+
         }
     }
 }
