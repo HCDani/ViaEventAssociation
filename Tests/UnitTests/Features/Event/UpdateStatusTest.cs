@@ -17,9 +17,8 @@ namespace UnitTests.Features.Event
         [Fact]
         public void UpdateStatusTest_Ready() {
             // Arrange S1
-            EventId id = EventId.Create(Guid.NewGuid()).payLoad;
             Title title = Title.Create("Event Title").payLoad;
-            VEvent vEvent = VEvent.Create(id, Status.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
             vEvent.UpdateTitle(title);
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEvent.UpdateVisibility(Visibility.Private);
@@ -32,7 +31,7 @@ namespace UnitTests.Features.Event
             Assert.Equal(0, resultStatusS1.resultCode);
             Assert.Equal(Status.Ready, vEvent.Status);
             // Arrange F1
-            vEvent = VEvent.Create(id, Status.Draft);
+            vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
             vEvent.UpdateTitle(title);
             // Act F1
             Result<Status> resultStatusF1 = vEvent.UpdateStatus(Status.Ready);
@@ -48,7 +47,7 @@ namespace UnitTests.Features.Event
 
             // Arrange F3 This only works if the current time is after 8 am and before midnight by 2 seconds.
             if(DateTime.Now.Hour > 8 || DateTime.Now.Hour < 23) {
-                vEvent = VEvent.Create(id, Status.Draft);
+                vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
                 vEvent.UpdateTitle(title);
                 Result<EventDuration> newDurationF10 = EventDuration.Create(DateTime.Now.AddSeconds(1), DateTime.Now.AddHours(1).AddSeconds(3));
                 // Act F3
@@ -62,7 +61,7 @@ namespace UnitTests.Features.Event
             }
 
             // Arrange F4
-            vEvent = VEvent.Create(id, Status.Draft);
+            vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
             // Act F4
             Result<Status> resultStatusF4 = vEvent.UpdateStatus(Status.Ready);
             // Assert F4
@@ -74,9 +73,8 @@ namespace UnitTests.Features.Event
         public void UpdateStatusTest_Activate()
         {
             // Arrange S1
-            EventId id = EventId.Create(Guid.NewGuid()).payLoad;
             Title title = Title.Create("Event Title").payLoad;
-            VEvent vEvent = VEvent.Create(id, Status.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
             vEvent.UpdateTitle(title);
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEvent.UpdateVisibility(Visibility.Private);
@@ -91,7 +89,7 @@ namespace UnitTests.Features.Event
             Assert.Equal(0, resultStatusS1B.resultCode);
 
             // Arrange S2
-            vEvent = VEvent.Create(id, Status.Draft);
+            vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
             vEvent.UpdateTitle(title);
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEvent.UpdateVisibility(Visibility.Private);
@@ -112,7 +110,7 @@ namespace UnitTests.Features.Event
             Assert.Equal(0, resultStatusS3.resultCode);
 
             // Arrange F1
-            vEvent = VEvent.Create(id, Status.Draft);
+            vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
             vEvent.UpdateDescription(null);
             // Act F1
             Result<Status> resultStatusF1 = vEvent.UpdateStatus(Status.Ready);

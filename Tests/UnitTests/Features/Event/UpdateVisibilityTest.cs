@@ -17,9 +17,8 @@ namespace UnitTests.Features.Event
         public void UpdateVisibility_Public()
         {
             // Arrange S1
-            EventId id = EventId.Create(Guid.NewGuid()).payLoad;
             Title title = Title.Create("Event Title").payLoad;
-            VEvent vEvent = VEvent.Create(id, Status.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
             vEvent.UpdateTitle(title);
             // Act S1
             Result<Visibility> resultVisibilityS1 = vEvent.UpdateVisibility(Visibility.Public);
@@ -44,10 +43,9 @@ namespace UnitTests.Features.Event
         public void UpdateVisibility_Private()
         {
             // Arrange S1
-            EventId id = EventId.Create(Guid.NewGuid()).payLoad;
             Title title = Title.Create("Event Title").payLoad;
             Status status = Status.Draft;
-            VEvent vEvent = VEvent.Create(id, status);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid(), status);
             vEvent.UpdateTitle(title);
             // Act S1
             Result<Visibility> resultVisibilityS1 = vEvent.UpdateVisibility(Visibility.Private);

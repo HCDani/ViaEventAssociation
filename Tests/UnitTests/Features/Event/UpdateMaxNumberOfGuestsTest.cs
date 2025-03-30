@@ -17,9 +17,8 @@ namespace UnitTests.Features.Event
         public void UpdateMaxNumberOfGuests_WithValidData()
         {
             // Arrange S1
-            EventId id = EventId.Create(Guid.NewGuid()).payLoad;
             Title title = Title.Create("Event Title").payLoad;
-            VEvent vEvent = VEvent.Create(id, Status.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
             vEvent.UpdateTitle(title);
             // Act S1
             vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(5).payLoad);

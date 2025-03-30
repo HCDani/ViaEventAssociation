@@ -18,9 +18,8 @@ namespace UnitTests.Features.Event
         public void UpdateDuration_WithValidData()
         {
             // Arrange S1
-            EventId id = EventId.Create(Guid.NewGuid()).payLoad;
             Title title = Title.Create("Event Title").payLoad;
-            VEvent vEvent = VEvent.Create(id, Status.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
             vEvent.UpdateTitle(title);
             // Act S1
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);

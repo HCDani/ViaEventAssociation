@@ -18,8 +18,7 @@ namespace UnitTests.Features.Event
         public void UpdateTitle_WithValidData()
         {
             // Arrange S1
-            EventId id = EventId.Create(Guid.NewGuid()).payLoad;
-            VEvent vEvent = VEvent.Create(id, Status.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
 
             // Act S1
             vEvent.UpdateTitle(Title.Create("Scary Movie Night!").payLoad);

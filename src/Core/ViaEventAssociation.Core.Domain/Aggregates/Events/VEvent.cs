@@ -9,7 +9,7 @@ using ViaEventAssociation.Core.Domain.Common.Bases;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Events {
-    public class VEvent : AggregateRoot<EventId> {
+    public class VEvent : AggregateRoot<Guid> {
         public Title Title { get; private set; }
         public Description Description { get; private set; }
         public EventDuration Duration { get; private set; }
@@ -18,14 +18,14 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Events {
         public MaxNumberOfGuests MaxNumberOfGuests { get; private set; }
         public LocationId LocationId { get; private set; }
 
-        private VEvent(EventId id, Status status) : base(id) {
+        private VEvent(Guid id, Status status) : base(id) {
             Title = Title.Default;
             MaxNumberOfGuests = MaxNumberOfGuests.Default;
             Description = Description.Default;
             Visibility = Visibility.Private;
             Status = status;
         }
-        public static VEvent Create(EventId id,Status status) {
+        public static VEvent Create(Guid id,Status status) {
             return new VEvent(id,status);
         }
         public Result<Title> UpdateTitle(Title title) {

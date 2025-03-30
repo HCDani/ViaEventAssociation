@@ -16,9 +16,8 @@ namespace UnitTests.Features.Event
         public void CreateEvent_WithValidData()
         {
             // Arrange S1
-            EventId id = EventId.Create(Guid.NewGuid()).payLoad;
             // Act S1
-            VEvent vEvent = VEvent.Create(id, Status.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
             // Assert S1
             Assert.Equal(Status.Draft, vEvent.Status);
             Assert.Equal(5, vEvent.MaxNumberOfGuests.Value);
