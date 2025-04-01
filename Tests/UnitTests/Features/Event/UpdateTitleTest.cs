@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ViaEventAssociation.Core.Domain.Aggregates.Events;
-using ViaEventAssociation.Core.Domain.Aggregates.Events.Values;
-using ViaEventAssociation.Core.Domain.Aggregates.Locations;
+using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
+using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
+using ViaEventAssociation.Core.Domain.Aggregates.LocationNS;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace UnitTests.Features.Event
@@ -29,7 +29,7 @@ namespace UnitTests.Features.Event
 
             // Arrange S2
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31,9,0,0), new DateTime(2026, 10, 31,11,11,11)).payLoad);
-            vEvent.UpdateLocationId(new LocationId(Guid.NewGuid()));
+            vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
             Result<Status> resultStatus = vEvent.UpdateStatus(Status.Ready);
 
             Assert.Equal(0, resultStatus.resultCode);

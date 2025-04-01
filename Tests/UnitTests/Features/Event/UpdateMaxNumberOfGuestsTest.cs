@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ViaEventAssociation.Core.Domain.Aggregates.Events;
-using ViaEventAssociation.Core.Domain.Aggregates.Events.Values;
-using ViaEventAssociation.Core.Domain.Aggregates.Locations;
+using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
+using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
+using ViaEventAssociation.Core.Domain.Aggregates.LocationNS;
+using ViaEventAssociation.Core.Domain.Aggregates.LocationNS.Values;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace UnitTests.Features.Event
@@ -19,6 +20,8 @@ namespace UnitTests.Features.Event
             // Arrange S1
             Title title = Title.Create("Event Title").payLoad;
             VEvent vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
+            Location location = Location.Create(Guid.NewGuid()).payLoad;
+            location.SetMaximumCapacity(MaxCapacity.Create(50).payLoad);
             vEvent.UpdateTitle(title);
             // Act S1
             vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(5).payLoad);
@@ -33,7 +36,7 @@ namespace UnitTests.Features.Event
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEvent.UpdateVisibility(Visibility.Private);
             vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
-            vEvent.UpdateLocationId(new LocationId(Guid.NewGuid()));
+            vEvent.UpdateLocation(location);
             Result<Status> resultStatusS3A = vEvent.UpdateStatus(Status.Ready);
             Assert.Equal(0, resultStatusS3A.resultCode);
             Result<Status> resultStatusS3B = vEvent.UpdateStatus(Status.Active);
@@ -55,8 +58,14 @@ namespace UnitTests.Features.Event
             // Assert F2
             Assert.Equal(52, resultMaxNumberOfGuestsF2.resultCode);
 
-            //TODO: F3
-
+            //Arrange F3
+            vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
+            location.SetMaximumCapacity(MaxCapacity.Create(10).payLoad);
+            vEvent.UpdateLocation(location);
+            // Act F3
+            Result<MaxNumberOfGuests> resultMaxNumberOfGuestsF3 = vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(11).payLoad);
+            // Arrange F3
+            Assert.Equal(53, resultMaxNumberOfGuestsF3.resultCode);
             // Arrange F4
             // Act F4
             Result<MaxNumberOfGuests> resultMaxNumberOfGuestsF4 = MaxNumberOfGuests.Create(0);

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-using ViaEventAssociation.Core.Domain.Aggregates.Events;
-using ViaEventAssociation.Core.Domain.Aggregates.Events.Values;
-using ViaEventAssociation.Core.Domain.Aggregates.Locations;
+using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
+using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
+using ViaEventAssociation.Core.Domain.Aggregates.LocationNS;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace UnitTests.Features.Event
@@ -23,7 +23,7 @@ namespace UnitTests.Features.Event
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEvent.UpdateVisibility(Visibility.Private);
             vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
-            vEvent.UpdateLocationId(new LocationId(Guid.NewGuid()));
+            vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
             vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(10).payLoad);
             // Act S1
             Result<Status> resultStatusS1 = vEvent.UpdateStatus(Status.Ready);
@@ -51,7 +51,7 @@ namespace UnitTests.Features.Event
                 vEvent.UpdateTitle(title);
                 Result<EventDuration> newDurationF10 = EventDuration.Create(DateTime.Now.AddSeconds(1), DateTime.Now.AddHours(1).AddSeconds(3));
                 // Act F3
-                vEvent.UpdateLocationId(new LocationId(Guid.NewGuid()));
+                vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
 
                 // Assert F3
                 Assert.Equal(0, vEvent.UpdateDuration(newDurationF10.payLoad).resultCode);
@@ -79,7 +79,7 @@ namespace UnitTests.Features.Event
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEvent.UpdateVisibility(Visibility.Private);
             vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
-            vEvent.UpdateLocationId(new LocationId(Guid.NewGuid()));
+            vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
             vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(10).payLoad);
             // Act S1
             Result<Status> resultStatusS1A = vEvent.UpdateStatus(Status.Ready);
@@ -94,7 +94,7 @@ namespace UnitTests.Features.Event
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEvent.UpdateVisibility(Visibility.Private);
             vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
-            vEvent.UpdateLocationId(new LocationId(Guid.NewGuid()));
+            vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
             vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(10).payLoad);
             Result<Status> resultStatusS2A = vEvent.UpdateStatus(Status.Ready);
             Assert.Equal(0, resultStatusS2A.resultCode);
@@ -127,7 +127,7 @@ namespace UnitTests.Features.Event
             // Assert F1
             Assert.Equal(5, resultStatusF1.resultCode);
             // Act F1
-            vEvent.UpdateLocationId(new LocationId(Guid.NewGuid()));
+            vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
             resultStatusF1 = vEvent.UpdateStatus(Status.Ready);
             // Assert F1
             Assert.Equal(6, resultStatusF1.resultCode);

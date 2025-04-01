@@ -31,12 +31,4 @@
       <ProjectReference Include="..\..\src\Core\ViaEventAssociation.Core.Domain\ViaEventAssociation.Core.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Features\GuestTests\AcceptInvitation\" />
-      <Folder Include="Features\GuestTests\CancelParticipation\" />
-      <Folder Include="Features\GuestTests\DeclineInvitation\" />
-      <Folder Include="Features\GuestTests\InviteGuest\" />
-      <Folder Include="Features\GuestTests\Participate\" />
-    </ItemGroup>
-
 </Project>
