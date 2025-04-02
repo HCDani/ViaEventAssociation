@@ -18,19 +18,19 @@ namespace UnitTests.Features.Event
         public void UpdateTitle_WithValidData()
         {
             // Arrange S1
-            VEvent vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
 
             // Act S1
             vEvent.UpdateTitle(Title.Create("Scary Movie Night!").payLoad);
 
             // Assert S1
             Assert.Equal("Scary Movie Night!", vEvent.Title.Value);
-            Assert.Equal(Status.Draft, vEvent.Status);
+            Assert.Equal(EventStatus.Draft, vEvent.Status);
 
             // Arrange S2
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31,9,0,0), new DateTime(2026, 10, 31,11,11,11)).payLoad);
             vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
-            Result<Status> resultStatus = vEvent.UpdateStatus(Status.Ready);
+            Result<EventStatus> resultStatus = vEvent.UpdateStatus(EventStatus.Ready);
 
             Assert.Equal(0, resultStatus.resultCode);
 
@@ -39,7 +39,7 @@ namespace UnitTests.Features.Event
 
             //Assert S2
             Assert.Equal("Graduation Gala", vEvent.Title.Value);
-            Assert.Equal(Status.Draft, vEvent.Status);
+            Assert.Equal(EventStatus.Draft, vEvent.Status);
 
             // Arrange F1
             // Act F1
@@ -71,9 +71,9 @@ namespace UnitTests.Features.Event
             Assert.Equal(10, vEvent.UpdateTitle(null).resultCode);
 
             // Arrange F5
-            Result<Status> resultStatusF5 = vEvent.UpdateStatus(Status.Ready);
+            Result<EventStatus> resultStatusF5 = vEvent.UpdateStatus(EventStatus.Ready);
             Assert.Equal(0, resultStatusF5.resultCode);
-            Result<Status> resultStatusF5A = vEvent.UpdateStatus(Status.Active);
+            Result<EventStatus> resultStatusF5A = vEvent.UpdateStatus(EventStatus.Active);
             Assert.Equal(0, resultStatusF5A.resultCode);
 
             // Act F5
@@ -84,7 +84,7 @@ namespace UnitTests.Features.Event
             Assert.Equal("Graduation Gala",vEvent.Title.Value);
 
             // Arrange F6
-            Result<Status> resultStatusF6 = vEvent.UpdateStatus(Status.Cancelled);
+            Result<EventStatus> resultStatusF6 = vEvent.UpdateStatus(EventStatus.Cancelled);
             Assert.Equal(0, resultStatusF6.resultCode);
 
             // Act F6

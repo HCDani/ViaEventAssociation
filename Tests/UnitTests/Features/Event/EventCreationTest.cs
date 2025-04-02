@@ -17,9 +17,9 @@ namespace UnitTests.Features.Event
         {
             // Arrange S1
             // Act S1
-            VEvent vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
             // Assert S1
-            Assert.Equal(Status.Draft, vEvent.Status);
+            Assert.Equal(EventStatus.Draft, vEvent.Status);
             Assert.Equal(5, vEvent.MaxNumberOfGuests.Value);
 
             // Arrange S2

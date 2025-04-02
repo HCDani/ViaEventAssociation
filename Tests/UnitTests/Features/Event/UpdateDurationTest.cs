@@ -19,7 +19,7 @@ namespace UnitTests.Features.Event
         {
             // Arrange S1
             Title title = Title.Create("Event Title").payLoad;
-            VEvent vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
             vEvent.UpdateTitle(title);
             // Act S1
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
@@ -41,7 +41,7 @@ namespace UnitTests.Features.Event
             vEvent.UpdateVisibility(Visibility.Private);
             vEvent.UpdateDescription(Description.Create("").payLoad);
             vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
-            Result<Status> resultStatus = vEvent.UpdateStatus(Status.Ready);
+            Result<EventStatus> resultStatus = vEvent.UpdateStatus(EventStatus.Ready);
 
             Assert.Equal(0, resultStatus.resultCode);
 
@@ -50,7 +50,7 @@ namespace UnitTests.Features.Event
             // Assert S3
             Assert.Equal(new DateTime(2026, 03, 21, 12, 0, 0), vEvent.Duration.From);
             Assert.Equal(new DateTime(2026, 03, 21, 16, 30, 0), vEvent.Duration.To);
-            Assert.Equal(Status.Draft, vEvent.Status);
+            Assert.Equal(EventStatus.Draft, vEvent.Status);
 
             // Arrange S4
             // Act S4
@@ -125,9 +125,9 @@ namespace UnitTests.Features.Event
 
             // This ended up in the end, because the cancelled status forbids any other changes.
             // Arrange F7
-            Result<Status> resultStatusF7A = vEvent.UpdateStatus(Status.Ready);
+            Result<EventStatus> resultStatusF7A = vEvent.UpdateStatus(EventStatus.Ready);
             Assert.Equal(0, resultStatusF7A.resultCode);
-            Result<Status> resultStatusF7B = vEvent.UpdateStatus(Status.Active);
+            Result<EventStatus> resultStatusF7B = vEvent.UpdateStatus(EventStatus.Active);
             Assert.Equal(0, resultStatusF7B.resultCode);
 
             // Act F7
@@ -139,7 +139,7 @@ namespace UnitTests.Features.Event
             Assert.Equal(new DateTime(2026, 03, 21, 01, 0, 0), vEvent.Duration.To);
 
             // Arrange F8
-            Result<Status> resultStatusF8 = vEvent.UpdateStatus(Status.Cancelled);
+            Result<EventStatus> resultStatusF8 = vEvent.UpdateStatus(EventStatus.Cancelled);
             Assert.Equal(0, resultStatusF8.resultCode);
 
             // Act F8

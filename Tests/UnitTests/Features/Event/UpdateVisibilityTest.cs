@@ -18,7 +18,7 @@ namespace UnitTests.Features.Event
         {
             // Arrange S1
             Title title = Title.Create("Event Title").payLoad;
-            VEvent vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
             vEvent.UpdateTitle(title);
             // Act S1
             Result<Visibility> resultVisibilityS1 = vEvent.UpdateVisibility(Visibility.Public);
@@ -29,7 +29,7 @@ namespace UnitTests.Features.Event
             // Arrange F1
             Result<Visibility> resultVisibilityF1A = vEvent.UpdateVisibility(Visibility.Private);
             Assert.Equal(0, resultVisibilityF1A.resultCode);
-            Result<Status> resultStatusF1 = vEvent.UpdateStatus(Status.Cancelled);
+            Result<EventStatus> resultStatusF1 = vEvent.UpdateStatus(EventStatus.Cancelled);
             Assert.Equal(0, resultStatusF1.resultCode);
             // Act F1
             Result<Visibility> resultVisibilityF1B = vEvent.UpdateVisibility(Visibility.Public);
@@ -44,7 +44,7 @@ namespace UnitTests.Features.Event
         {
             // Arrange S1
             Title title = Title.Create("Event Title").payLoad;
-            Status status = Status.Draft;
+            EventStatus status = EventStatus.Draft;
             VEvent vEvent = VEvent.Create(Guid.NewGuid(), status);
             vEvent.UpdateTitle(title);
             // Act S1
@@ -59,7 +59,7 @@ namespace UnitTests.Features.Event
             Result<Visibility> resultVisibilityS2B = vEvent.UpdateVisibility(Visibility.Private);
             // Assert S2
             Assert.Equal(Visibility.Private, vEvent.Visibility);
-            Assert.Equal(Status.Draft, vEvent.Status);
+            Assert.Equal(EventStatus.Draft, vEvent.Status);
             // Arrange F1
             Result<Visibility> resultVisibilityF1A = vEvent.UpdateVisibility(Visibility.Public);
             Assert.Equal(0, resultVisibilityF1A.resultCode);
@@ -67,9 +67,9 @@ namespace UnitTests.Features.Event
             vEvent.UpdateDescription(Description.Create("").payLoad);
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
-            Result<Status> resultStatusF1A = vEvent.UpdateStatus(Status.Ready);
+            Result<EventStatus> resultStatusF1A = vEvent.UpdateStatus(EventStatus.Ready);
             Assert.Equal(0, resultStatusF1A.resultCode);
-            Result<Status> resultStatusF1B = vEvent.UpdateStatus(Status.Active);
+            Result<EventStatus> resultStatusF1B = vEvent.UpdateStatus(EventStatus.Active);
             Assert.Equal(0, resultStatusF1B.resultCode);
             // Act F1
             Result<Visibility> resultVisibilityF1B = vEvent.UpdateVisibility(Visibility.Private);
@@ -77,7 +77,7 @@ namespace UnitTests.Features.Event
             Assert.Equal(42, resultVisibilityF1B.resultCode);
             Assert.Equal(Visibility.Public, vEvent.Visibility);
             // Arrange F2
-            Result<Status> resultStatusF2 = vEvent.UpdateStatus(Status.Cancelled);
+            Result<EventStatus> resultStatusF2 = vEvent.UpdateStatus(EventStatus.Cancelled);
             Assert.Equal(0, resultStatusF2.resultCode);
             // Act F2
             Result<Visibility> resultVisibilityF2 = vEvent.UpdateVisibility(Visibility.Public);

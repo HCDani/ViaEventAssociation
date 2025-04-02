@@ -19,7 +19,7 @@ namespace UnitTests.Features.Event
         public void UpdateDescription_WithValidData()
         {
             // Arrange S1
-            VEvent vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
 
             // Act S1
             vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
@@ -38,7 +38,7 @@ namespace UnitTests.Features.Event
             vEvent.UpdateTitle(Title.Create("Event Title").payLoad);
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
-            Result<Status> resultStatus = vEvent.UpdateStatus(Status.Ready);
+            Result<EventStatus> resultStatus = vEvent.UpdateStatus(EventStatus.Ready);
 
             Assert.Equal(0, resultStatus.resultCode);
 
@@ -47,7 +47,7 @@ namespace UnitTests.Features.Event
 
             // Assert S3
             Assert.Equal("Nullam tempor lacus nisl, eget tempus", vEvent.Description.Value);
-            Assert.Equal(Status.Draft, vEvent.Status);
+            Assert.Equal(EventStatus.Draft, vEvent.Status);
 
             // Arrange F1
             // Act F1
@@ -57,10 +57,10 @@ namespace UnitTests.Features.Event
 
             // Arrange F2
 
-            Assert.Equal(Status.Draft, vEvent.Status);
-            Result<Status> resultStatusF2 = vEvent.UpdateStatus(Status.Ready);
+            Assert.Equal(EventStatus.Draft, vEvent.Status);
+            Result<EventStatus> resultStatusF2 = vEvent.UpdateStatus(EventStatus.Ready);
             Assert.Equal(0, resultStatusF2.resultCode);
-            Result<Status> resultStatusF2A = vEvent.UpdateStatus(Status.Active);
+            Result<EventStatus> resultStatusF2A = vEvent.UpdateStatus(EventStatus.Active);
             Assert.Equal(0, resultStatusF2A.resultCode);
 
             // Act F2
@@ -71,7 +71,7 @@ namespace UnitTests.Features.Event
             Assert.Equal("Nullam tempor lacus nisl, eget tempus", vEvent.Description.Value);
 
             // Arrange F3
-            Result<Status> resultStatusF3 = vEvent.UpdateStatus(Status.Cancelled);
+            Result<EventStatus> resultStatusF3 = vEvent.UpdateStatus(EventStatus.Cancelled);
             Assert.Equal(0, resultStatusF3.resultCode);
 
             // Act F3

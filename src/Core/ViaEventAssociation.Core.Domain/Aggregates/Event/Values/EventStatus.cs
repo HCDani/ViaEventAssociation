@@ -1,5 +1,5 @@
 ﻿namespace ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values {
-    public enum Status {
+    public enum EventStatus {
         Draft,
         Ready,
         Cancelled,

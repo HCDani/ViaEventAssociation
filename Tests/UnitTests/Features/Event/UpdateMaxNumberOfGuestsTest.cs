@@ -19,7 +19,7 @@ namespace UnitTests.Features.Event
         {
             // Arrange S1
             Title title = Title.Create("Event Title").payLoad;
-            VEvent vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
             Location location = Location.Create(Guid.NewGuid()).payLoad;
             location.SetMaximumCapacity(MaxCapacity.Create(50).payLoad);
             vEvent.UpdateTitle(title);
@@ -37,9 +37,9 @@ namespace UnitTests.Features.Event
             vEvent.UpdateVisibility(Visibility.Private);
             vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
             vEvent.UpdateLocation(location);
-            Result<Status> resultStatusS3A = vEvent.UpdateStatus(Status.Ready);
+            Result<EventStatus> resultStatusS3A = vEvent.UpdateStatus(EventStatus.Ready);
             Assert.Equal(0, resultStatusS3A.resultCode);
-            Result<Status> resultStatusS3B = vEvent.UpdateStatus(Status.Active);
+            Result<EventStatus> resultStatusS3B = vEvent.UpdateStatus(EventStatus.Active);
             Assert.Equal(0, resultStatusS3B.resultCode);
             // Act S3
             vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(15).payLoad);
@@ -51,7 +51,7 @@ namespace UnitTests.Features.Event
             // Assert F1
             Assert.Equal(51, resultMaxNumberOfGuestsF1.resultCode);
             // Arrange F2
-            Result<Status> resultStatusF2 = vEvent.UpdateStatus(Status.Cancelled);
+            Result<EventStatus> resultStatusF2 = vEvent.UpdateStatus(EventStatus.Cancelled);
             Assert.Equal(0, resultStatusF2.resultCode);
             // Act F2
             Result<MaxNumberOfGuests> resultMaxNumberOfGuestsF2 = vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(20).payLoad);
@@ -59,7 +59,7 @@ namespace UnitTests.Features.Event
             Assert.Equal(52, resultMaxNumberOfGuestsF2.resultCode);
 
             //Arrange F3
-            vEvent = VEvent.Create(Guid.NewGuid(), Status.Draft);
+            vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
             location.SetMaximumCapacity(MaxCapacity.Create(10).payLoad);
             vEvent.UpdateLocation(location);
             // Act F3
