@@ -6,6 +6,8 @@ namespace UnitTests.Features.GuestNS;
 
 public class RegisterGuestTest
 {
+    // ID 10 use case.
+
     [Fact]
     public void RegisterGuest_WithValidData()
     {
