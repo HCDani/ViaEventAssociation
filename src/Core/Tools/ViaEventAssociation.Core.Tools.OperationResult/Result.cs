@@ -36,5 +36,19 @@ namespace ViaEventAssociation.Core.Tools.OperationResult
         public void AddError(int resultCode, string errorMessage){
             this.errorMessage += "," + resultCode + "-" + errorMessage;
         }
+        public static Result<T> CombineResultsInto(params Result<object>[] results) {
+            foreach (var result in results) {
+                if (result.resultCode != 0) {
+                    return new Result<T>(result.resultCode, result.errorMessage);
+                }
+            }
+            return new Result<T>(0,null);
+        }
+        public Result<T> WithPayLoadIfSuccess(Func<T> value) {
+            if (resultCode == 0) {
+                return new Result<T>(value());
+            }
+            return this;
+        }
     }
 }

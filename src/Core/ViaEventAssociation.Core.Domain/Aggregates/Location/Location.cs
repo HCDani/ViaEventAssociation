@@ -20,6 +20,18 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.LocationNS {
             Location location = new Location(id);
             return new Result<Location>(location);
         }
+        public static Result<Location> Create(Guid id, LocationName newName, MaxCapacity newCapacity, Availability newAvailability, Address newAddress) {
+            if (newName == null) return new Result<Location>(101, "Location name is required.");
+            if (newCapacity == null) return new Result<Location>(91, "Max capacity is required.");
+            if (newAvailability == null) return new Result<Location>(84, "Availability is required.");
+            if (newAddress == null) return new Result<Location>(75, "Address is required.");
+            Location location = new Location(id);
+            location.LocationName = newName;
+            location.MaxCapacity = newCapacity;
+            location.Availability = newAvailability;
+            location.Address = newAddress;
+            return new Result<Location>(location);
+        }
 
         public Result<LocationName> UpdateName(LocationName newName) {
             if (newName == null) return new Result<LocationName>(101, "Location name is required.");
