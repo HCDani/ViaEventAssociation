@@ -19,7 +19,7 @@ namespace UnitTests.Features.Event
         public void UpdateDescription_WithValidData()
         {
             // Arrange S1
-            VEvent vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid());
 
             // Act S1
             vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);

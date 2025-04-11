@@ -7,6 +7,6 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Application.AppEntry {
     public interface ICommandHandler<TCommand> {
-        Task<Result<TCommand>> HandleAsync(TCommand command);
+        public Task<Result<TCommand>> HandleAsync(TCommand command);
     }
 }

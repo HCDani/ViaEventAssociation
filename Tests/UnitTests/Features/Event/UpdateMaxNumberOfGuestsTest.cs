@@ -19,7 +19,7 @@ namespace UnitTests.Features.Event
         {
             // Arrange S1
             Title title = Title.Create("Event Title").payLoad;
-            VEvent vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid());
             Location location = Location.Create(Guid.NewGuid()).payLoad;
             location.SetMaximumCapacity(MaxCapacity.Create(50).payLoad);
             vEvent.UpdateTitle(title);
@@ -59,7 +59,7 @@ namespace UnitTests.Features.Event
             Assert.Equal(52, resultMaxNumberOfGuestsF2.resultCode);
 
             //Arrange F3
-            vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+            vEvent = VEvent.Create(Guid.NewGuid());
             location.SetMaximumCapacity(MaxCapacity.Create(10).payLoad);
             vEvent.UpdateLocation(location);
             // Act F3

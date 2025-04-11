@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Tests\UnitTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViaEventAssociation.Core.Domain", "src\Core\ViaEventAssociation.Core.Domain\ViaEventAssociation.Core.Domain.csproj", "{2AC2143C-534E-4AC2-862B-D9CC2DB5A392}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViaEventAssociation.Core.Application", "ViaEventAssociation.Core.Application\ViaEventAssociation.Core.Application.csproj", "{01E3B2E4-E5BB-4E57-9F73-2CE2BBD4BCF6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{2AC2143C-534E-4AC2-862B-D9CC2DB5A392}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AC2143C-534E-4AC2-862B-D9CC2DB5A392}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AC2143C-534E-4AC2-862B-D9CC2DB5A392}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01E3B2E4-E5BB-4E57-9F73-2CE2BBD4BCF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01E3B2E4-E5BB-4E57-9F73-2CE2BBD4BCF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01E3B2E4-E5BB-4E57-9F73-2CE2BBD4BCF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01E3B2E4-E5BB-4E57-9F73-2CE2BBD4BCF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +53,7 @@ Global
 		{4F742342-D45A-437C-A536-F6896206D57F} = {20E8DAAB-8328-4258-BFE8-469FF631D6A1}
 		{3A923B68-2982-49A4-85F3-25FD8C287D04} = {D7BED952-C5A5-4880-80E6-40BF2D9536BD}
 		{2AC2143C-534E-4AC2-862B-D9CC2DB5A392} = {8E8FDA8E-3A0E-4126-9798-F097D288B21E}
+		{01E3B2E4-E5BB-4E57-9F73-2CE2BBD4BCF6} = {8E8FDA8E-3A0E-4126-9798-F097D288B21E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1CEE05F6-7E35-41D1-B75A-825CC163168E}

@@ -13,15 +13,15 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.EventNS {
         public MaxNumberOfGuests MaxNumberOfGuests { get; private set; }
         public Location Location { get; private set; }
 
-        private VEvent(Guid id, EventStatus status) : base(id) {
+        private VEvent(Guid id) : base(id) {
             Title = Title.Default;
             MaxNumberOfGuests = MaxNumberOfGuests.Default;
             Description = Description.Default;
             Visibility = Visibility.Private;
-            Status = status;
+            Status = EventStatus.Draft;
         }
-        public static VEvent Create(Guid id,EventStatus status) {
-            return new VEvent(id,status);
+        public static VEvent Create(Guid id) {
+            return new VEvent(id);
         }
         public Result<Title> UpdateTitle(Title title) {
             if (title == null || title == Title.Default) return new Result<Title>(10, "Title must be set");

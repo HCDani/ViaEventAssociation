@@ -21,7 +21,8 @@ namespace ViaEventAssociation.Core.Application.Commands.Guest {
             Result<Email> emailResult = Email.Create(email);
             Result<GuestName> nameResult = GuestName.Create(Fname, Lname);
             Result<ProfilePictureUrl> profilePictureUrlResult = ProfilePictureUrl.Create(profilePictureUrl);
-            return null; // Todo:  //Result<RegisterGuestCommand>.CombineResultsInto(emailResult, nameResult, profilePictureUrlResult).WithPayLoadIfSuccess(() => new RegisterGuestCommand(emailResult.payLoad, nameResult.payLoad, profilePictureUrlResult.payLoad));
+            return Result<RegisterGuestCommand>.CombineResultsInto(emailResult, nameResult, profilePictureUrlResult)
+                .WithPayLoadIfSuccess(() => new RegisterGuestCommand(emailResult.payLoad, nameResult.payLoad, profilePictureUrlResult.payLoad));
         }
     }
 }

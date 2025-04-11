@@ -47,7 +47,7 @@ namespace UnitTests.Features.EventParticipationTest {
             ProfilePictureUrl profilePictureUrl5 = ProfilePictureUrl.Create("https://example.com/profile.jpg").payLoad;
             Result<Guest> guestResult5 = Guest.RegisterGuest(id5, guestName5, email5, profilePictureUrl5);
 
-            VEvent vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateTitle(Title.Create("Event Title").payLoad);
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEvent.UpdateVisibility(Visibility.Public);
@@ -69,7 +69,7 @@ namespace UnitTests.Features.EventParticipationTest {
             Assert.Equal(0, eventParticipationResult.resultCode);
 
             // Arrange F1
-            vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+            vEvent = VEvent.Create(Guid.NewGuid());
             mockEventParticipants.Setup(x => x.GetParticipants(vEvent.Id)).Returns(eventGuestParticipations);
 
             // Act F1
@@ -121,7 +121,7 @@ namespace UnitTests.Features.EventParticipationTest {
             Assert.Equal(155, eventParticipationResultF2F.resultCode);
             // Arrange F3 This only works if the current time is after 8 am and before midnight by 2 seconds.
             if (DateTime.Now.Hour > 8 && DateTime.Now.Hour < 23) {
-                vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+                vEvent = VEvent.Create(Guid.NewGuid());
                 vEvent.UpdateTitle(Title.Create("Event Title").payLoad);
                 vEvent.UpdateVisibility(Visibility.Public);
                 vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
@@ -145,7 +145,7 @@ namespace UnitTests.Features.EventParticipationTest {
             }
 
             // Arrange F4
-            vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+            vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateTitle(Title.Create("Event Title").payLoad);
             vEvent.UpdateVisibility(Visibility.Private);
             vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
@@ -179,7 +179,7 @@ namespace UnitTests.Features.EventParticipationTest {
         [Fact]
         public void GuestIsInvitedToEvent() {
             // Arrange S1
-            VEvent vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateTitle(Title.Create("Event Title").payLoad);
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEvent.UpdateVisibility(Visibility.Public);
@@ -265,7 +265,7 @@ namespace UnitTests.Features.EventParticipationTest {
         [Fact]
         public void GuestAcceptsInvitation() {
             // Arrange S1
-            VEvent vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateTitle(Title.Create("Event Title").payLoad);
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEvent.UpdateVisibility(Visibility.Public);
@@ -336,7 +336,7 @@ namespace UnitTests.Features.EventParticipationTest {
             Assert.Equal(155, eventParticipationResultF2F.resultCode);
 
             // Arrange F4
-            VEvent vEventF4 = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+            VEvent vEventF4 = VEvent.Create(Guid.NewGuid());
             vEventF4.UpdateTitle(Title.Create("Event Title").payLoad);
             vEventF4.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEventF4.UpdateVisibility(Visibility.Public);
@@ -371,7 +371,7 @@ namespace UnitTests.Features.EventParticipationTest {
 
             // Arrange F5
             if (DateTime.Now.Hour > 8 && DateTime.Now.Hour < 23) {
-                VEvent vEventF5 = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+                VEvent vEventF5 = VEvent.Create(Guid.NewGuid());
                 vEventF5.UpdateTitle(Title.Create("Event Title").payLoad);
                 vEventF5.UpdateDuration(EventDuration.Create(DateTime.Now.AddSeconds(1), DateTime.Now.AddHours(1).AddSeconds(3)).payLoad);
                 vEventF5.UpdateVisibility(Visibility.Public);

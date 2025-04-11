@@ -18,7 +18,7 @@ namespace UnitTests.Features.Event
         public void UpdateStatusTest_Ready() {
             // Arrange S1
             Title title = Title.Create("Event Title").payLoad;
-            VEvent vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateTitle(title);
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEvent.UpdateVisibility(Visibility.Private);
@@ -31,7 +31,7 @@ namespace UnitTests.Features.Event
             Assert.Equal(0, resultStatusS1.resultCode);
             Assert.Equal(EventStatus.Ready, vEvent.Status);
             // Arrange F1
-            vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+            vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateTitle(title);
             // Act F1
             Result<EventStatus> resultStatusF1 = vEvent.UpdateStatus(EventStatus.Ready);
@@ -47,7 +47,7 @@ namespace UnitTests.Features.Event
 
             // Arrange F3 This only works if the current time is after 8 am and before midnight by 2 seconds.
             if(DateTime.Now.Hour > 8 && DateTime.Now.Hour < 23) {
-                vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+                vEvent = VEvent.Create(Guid.NewGuid());
                 vEvent.UpdateTitle(title);
                 Result<EventDuration> newDurationF10 = EventDuration.Create(DateTime.Now.AddSeconds(1), DateTime.Now.AddHours(1).AddSeconds(3));
                 // Act F3
@@ -61,7 +61,7 @@ namespace UnitTests.Features.Event
             }
 
             // Arrange F4
-            vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+            vEvent = VEvent.Create(Guid.NewGuid());
             // Act F4
             Result<EventStatus> resultStatusF4 = vEvent.UpdateStatus(EventStatus.Ready);
             // Assert F4
@@ -74,7 +74,7 @@ namespace UnitTests.Features.Event
         {
             // Arrange S1
             Title title = Title.Create("Event Title").payLoad;
-            VEvent vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateTitle(title);
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEvent.UpdateVisibility(Visibility.Private);
@@ -89,7 +89,7 @@ namespace UnitTests.Features.Event
             Assert.Equal(0, resultStatusS1B.resultCode);
 
             // Arrange S2
-            vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+            vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateTitle(title);
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
             vEvent.UpdateVisibility(Visibility.Private);
@@ -110,7 +110,7 @@ namespace UnitTests.Features.Event
             Assert.Equal(0, resultStatusS3.resultCode);
 
             // Arrange F1
-            vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+            vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateDescription(null);
             // Act F1
             Result<EventStatus> resultStatusF1 = vEvent.UpdateStatus(EventStatus.Ready);

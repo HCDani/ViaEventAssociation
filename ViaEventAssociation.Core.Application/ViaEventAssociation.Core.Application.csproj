@@ -6,4 +6,19 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="AppEntry\Event\" />
+    <Folder Include="AppEntry\Guest\" />
+    <Folder Include="AppEntry\Location\" />
+    <Folder Include="Commands\Location\" />
+    <Folder Include="Handlers\Guest\" />
+    <Folder Include="Handlers\Location\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\Core\Tools\ViaEventAssociation.Core.Tools.OperationResult\ViaEventAssociation.Core.Tools.OperationResult.csproj" />
+    <ProjectReference Include="..\src\Core\ViaEventAssociation.Core.Domain\ViaEventAssociation.Core.Domain.csproj" />
+    <ProjectReference Include="..\Tests\UnitTests\UnitTests.csproj" />
+  </ItemGroup>
+
 </Project>

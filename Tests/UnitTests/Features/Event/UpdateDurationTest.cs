@@ -19,7 +19,7 @@ namespace UnitTests.Features.Event
         {
             // Arrange S1
             Title title = Title.Create("Event Title").payLoad;
-            VEvent vEvent = VEvent.Create(Guid.NewGuid(), EventStatus.Draft);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateTitle(title);
             // Act S1
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
