@@ -18,10 +18,10 @@ namespace ViaEventAssociation.Core.Application.Handlers.Event {
             this.eventRepository = eventRepository;
             this.unitOfWork = unitOfWork;
         }
-        public async Task<Result<CreateEventCommand>> HandleAsync(CreateEventCommand command) {
-            VEvent vEvent = await eventRepository.GetAsync(command.EventId);
-            //Result<CreateEventCommand> result = vEvent.Create(command.Create);
-            return null;
+        public async Task<Result<CreateEventCommandResponse>> HandleAsync(CreateEventCommand command) {
+            VEvent vEvent = vEvent.Create(Guid.NewGuid());
+            Result<CreateEventCommandResponse> response = new Result<CreateEventCommandResponse>(new CreateEventCommandResponse(vEvent.Id));
+            return Task.FromResult(response);
         }
     }
 }

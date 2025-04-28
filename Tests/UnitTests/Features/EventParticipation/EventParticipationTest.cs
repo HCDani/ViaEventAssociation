@@ -70,6 +70,7 @@ namespace UnitTests.Features.EventParticipationTest {
 
             // Arrange F1
             vEvent = VEvent.Create(Guid.NewGuid());
+            vEvent.UpdateVisibility(Visibility.Public);
             mockEventParticipants.Setup(x => x.GetParticipants(vEvent.Id)).Returns(eventGuestParticipations);
 
             // Act F1
@@ -82,7 +83,6 @@ namespace UnitTests.Features.EventParticipationTest {
             Title titleF2 = Title.Create("Event Title").payLoad;
             vEvent.UpdateTitle(titleF2);
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
-            vEvent.UpdateVisibility(Visibility.Public);
             vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
             vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
             vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(10).payLoad);
@@ -207,7 +207,9 @@ namespace UnitTests.Features.EventParticipationTest {
             Assert.Equal(153, eventParticipationResultF3.resultCode);
 
             // Arrange F4
-            eventParticipationResult.payLoad.UpdateStatus(ParticipationStatus.Participating, mockEventParticipants.Object);
+            Result<EventStatus> eventStatusResultF1 = vEvent.UpdateStatus(EventStatus.Active);
+            Assert.Equal(0, eventStatusResultF1.resultCode);
+            eventParticipationResult = eventParticipationResult.payLoad.UpdateStatus(ParticipationStatus.Participating, mockEventParticipants.Object);
 
             // Act F4
             eventParticipationResult = EventParticipation.Create(Guid.NewGuid(), guest, vEvent, ParticipationStatus.Invited, mockEventParticipants.Object);
@@ -220,30 +222,31 @@ namespace UnitTests.Features.EventParticipationTest {
             Guest guest4 = Guest.RegisterGuest(Guid.NewGuid(), GuestName.Create("Alma", "Beta").payLoad, Email.Create("alma@via.dk").payLoad, ProfilePictureUrl.Create("https://example.com/profile.jpg").payLoad).payLoad;
             Guest guest5 = Guest.RegisterGuest(Guid.NewGuid(), GuestName.Create("Alma", "Beta").payLoad, Email.Create("alma@via.dk").payLoad, ProfilePictureUrl.Create("https://example.com/profile.jpg").payLoad).payLoad;
             Guest guest6 = Guest.RegisterGuest(Guid.NewGuid(), GuestName.Create("Alma", "Beta").payLoad, Email.Create("alma@via.dk").payLoad, ProfilePictureUrl.Create("https://example.com/profile.jpg").payLoad).payLoad;
+ 
 
             // Act F2
             Result<EventParticipation> eventParticipationResultF2A = EventParticipation.Create(Guid.NewGuid(), guest2, vEvent, ParticipationStatus.Invited, mockEventParticipants.Object);
             Assert.Equal(0, eventParticipationResultF2A.resultCode);
             eventGuestParticipations.Add(eventParticipationResultF2A.payLoad);
-            eventParticipationResultF2A.payLoad.UpdateStatus(ParticipationStatus.Participating, mockEventParticipants.Object);
+            eventParticipationResultF2A = eventParticipationResultF2A.payLoad.UpdateStatus(ParticipationStatus.Participating, mockEventParticipants.Object);
             Assert.Equal(0, eventParticipationResultF2A.resultCode);
 
             Result<EventParticipation> eventParticipationResultF2B = EventParticipation.Create(Guid.NewGuid(), guest3, vEvent, ParticipationStatus.Invited, mockEventParticipants.Object);
             Assert.Equal(0, eventParticipationResultF2B.resultCode);
             eventGuestParticipations.Add(eventParticipationResultF2B.payLoad);
-            eventParticipationResultF2B.payLoad.UpdateStatus(ParticipationStatus.Participating, mockEventParticipants.Object);
+            eventParticipationResultF2B = eventParticipationResultF2B.payLoad.UpdateStatus(ParticipationStatus.Participating, mockEventParticipants.Object);
             Assert.Equal(0, eventParticipationResultF2B.resultCode);
 
             Result<EventParticipation> eventParticipationResultF2C = EventParticipation.Create(Guid.NewGuid(), guest4, vEvent, ParticipationStatus.Invited, mockEventParticipants.Object);
             Assert.Equal(0, eventParticipationResultF2C.resultCode);
             eventGuestParticipations.Add(eventParticipationResultF2C.payLoad);
-            eventParticipationResultF2C.payLoad.UpdateStatus(ParticipationStatus.Participating, mockEventParticipants.Object);
+            eventParticipationResultF2C = eventParticipationResultF2C.payLoad.UpdateStatus(ParticipationStatus.Participating, mockEventParticipants.Object);
             Assert.Equal(0, eventParticipationResultF2C.resultCode);
 
             Result<EventParticipation> eventParticipationResultF2D = EventParticipation.Create(Guid.NewGuid(), guest5, vEvent, ParticipationStatus.Invited, mockEventParticipants.Object);
             Assert.Equal(0, eventParticipationResultF2D.resultCode);
             eventGuestParticipations.Add(eventParticipationResultF2D.payLoad);
-            eventParticipationResultF2D.payLoad.UpdateStatus(ParticipationStatus.Participating, mockEventParticipants.Object);
+            eventParticipationResultF2D = eventParticipationResultF2D.payLoad.UpdateStatus(ParticipationStatus.Participating, mockEventParticipants.Object);
             Assert.Equal(0, eventParticipationResultF2D.resultCode);
 
             Result<EventParticipation> eventParticipationResultF2E = EventParticipation.Create(Guid.NewGuid(), guest6, vEvent, ParticipationStatus.Invited, mockEventParticipants.Object);

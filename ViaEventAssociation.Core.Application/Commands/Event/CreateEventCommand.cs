@@ -9,16 +9,11 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Application.Commands.Event {
     public class CreateEventCommand {
-        public Guid EventId { get; }
-        public EventStatus Status { get; }
 
-        private CreateEventCommand(Guid eventId, EventStatus status) {
-            this.EventId = eventId;
-            Status = status;
+        private CreateEventCommand() {
         }
-        public static Result<CreateEventCommand> Create(string eventId, string status) {
-            Enum.TryParse<EventStatus>(status, out EventStatus eventStatus);
-            return new Result<CreateEventCommand>(new CreateEventCommand(Guid.Parse(eventId), eventStatus));
+        public static Result<CreateEventCommand> Create() {
+            return new Result<CreateEventCommand>(new CreateEventCommand());
         }
     }
 }
