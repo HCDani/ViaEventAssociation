@@ -3,25 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ViaEventAssociation.Core.Domain.Common.Fake_stuff;
 using ViaEventAssociation.Core.Application.AppEntry;
 using ViaEventAssociation.Core.Application.Commands.Event;
+using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
 using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
+using ViaEventAssociation.Core.Domain.Common.Fake_stuff;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Application.Handlers.Event {
-    public class CreateEventHandler : ICommandHandler<CreateEventCommand> {
+    class UpdateEventVisibilityHandler : ICommandHandler<UpdateEventVisibilityCommand> {
         private readonly IEventRepository eventRepository;
         private readonly IUnitOfWork unitOfWork;
 
-        public CreateEventHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) {
+        public UpdateEventVisibilityHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) {
             this.eventRepository = eventRepository;
             this.unitOfWork = unitOfWork;
         }
-        public async Task<Result<CreateEventCommand>> HandleAsync(CreateEventCommand command) {
-            VEvent vEvent = VEvent.Create(Guid.NewGuid());
-            await eventRepository.CreateAsync(vEvent);
-            return command.AddResponse(vEvent.Id);
+
+        public async Task<Result<UpdateEventVisibilityCommand>> HandleAsync(UpdateEventVisibilityCommand command) {
+            VEvent vEvent = await eventRepository.GetAsync(command.EventId);
+            Result<Visibility> result = vEvent.UpdateVisibility(command.Visibility);
+            return command.AddResponse(result);
         }
     }
 }

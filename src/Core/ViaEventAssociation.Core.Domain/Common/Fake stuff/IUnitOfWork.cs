@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnitTests.Features.Fake_stuff {
+namespace ViaEventAssociation.Core.Domain.Common.Fake_stuff {
     public interface IUnitOfWork {
         Task SaveChangesASync();
     }

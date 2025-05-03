@@ -18,7 +18,6 @@
   <ItemGroup>
     <ProjectReference Include="..\src\Core\Tools\ViaEventAssociation.Core.Tools.OperationResult\ViaEventAssociation.Core.Tools.OperationResult.csproj" />
     <ProjectReference Include="..\src\Core\ViaEventAssociation.Core.Domain\ViaEventAssociation.Core.Domain.csproj" />
-    <ProjectReference Include="..\Tests\UnitTests\UnitTests.csproj" />
   </ItemGroup>
 
 </Project>

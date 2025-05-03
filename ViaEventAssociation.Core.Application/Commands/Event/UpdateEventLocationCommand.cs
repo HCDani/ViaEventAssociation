@@ -18,5 +18,8 @@ namespace ViaEventAssociation.Core.Application.Commands.Event {
         public static Result<UpdateEventLocationCommand> Create(string eventId, string locationId )  {
             return new Result<UpdateEventLocationCommand>(new UpdateEventLocationCommand(Guid.Parse(eventId), Guid.Parse(locationId)));
         }
+        public Result<UpdateEventLocationCommand> AddResponse(Guid locationId) {
+            return new Result<UpdateEventLocationCommand>(this);
+        }
     }
 }

@@ -9,16 +9,23 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 namespace ViaEventAssociation.Core.Application.Commands.Event {
     public class UpdateEventDurationCommand {
         public EventDuration Duration { get; }
-
-        private UpdateEventDurationCommand(EventDuration duration) {
+        public Guid EventId { get; }
+        private UpdateEventDurationCommand(EventDuration duration, Guid eventId) {
             Duration = duration;
+            EventId = eventId;
         }
-        public static Result<UpdateEventDurationCommand> Create(DateTime from, DateTime to) {
+        public static Result<UpdateEventDurationCommand> Create(DateTime from, DateTime to, string eventId) {
             Result<EventDuration> durationResult = EventDuration.Create(from, to);
             if (durationResult.resultCode != 0) {
                 return new Result<UpdateEventDurationCommand>(durationResult.resultCode, durationResult.errorMessage);
             }
-            return new Result<UpdateEventDurationCommand>(new UpdateEventDurationCommand(durationResult.payLoad));
+            return new Result<UpdateEventDurationCommand>(new UpdateEventDurationCommand(durationResult.payLoad, Guid.Parse(eventId)));
+        }
+        public Result<UpdateEventDurationCommand> AddResponse(Result<EventDuration> duration) {
+            if (duration.resultCode != 0) {
+                return new Result<UpdateEventDurationCommand>(duration.resultCode, duration.errorMessage);
+            }
+            return new Result<UpdateEventDurationCommand>(this);
         }
     }
 }

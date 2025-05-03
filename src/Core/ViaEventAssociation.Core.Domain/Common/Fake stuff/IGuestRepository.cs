@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ViaEventAssociation.Core.Domain.Aggregates.GuestNS;
 
-namespace UnitTests.Features.Fake_stuff {
+namespace ViaEventAssociation.Core.Domain.Common.Fake_stuff {
     public interface IGuestRepository {
         Task CreateAsync(Guest guest);
         Task<Guest> GetAsync(Guid guestId);

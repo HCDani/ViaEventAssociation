@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using ViaEventAssociation.Core.Domain.Aggregates.LocationNS;
 
-namespace UnitTests.Features.Fake_stuff {
-    interface ILocationRepository {
+namespace ViaEventAssociation.Core.Domain.Common.Fake_stuff {
+    public interface ILocationRepository {
         Task CreateAsync(Location location);
         Task<Location> GetAsync(Guid locationId);
         Task SaveAsync();
