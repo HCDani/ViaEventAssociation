@@ -25,8 +25,8 @@ namespace ViaEventAssociation.Core.Application.Handlers.Event {
         public async Task<Result<UpdateEventLocationCommand>> HandleAsync(UpdateEventLocationCommand command) {
             VEvent vEvent = await eventRepository.GetAsync(command.EventId);
             Location location = await locationRepository.GetAsync(command.LocationId);
-            vEvent.UpdateLocation(location);
-            return command.AddResponse(location.Id);
+            Result<Location> result = vEvent.UpdateLocation(location);
+            return command.AddResponse(result);
         }
     }
 }
