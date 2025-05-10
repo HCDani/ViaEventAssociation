@@ -7,22 +7,21 @@ using ViaEventAssociation.Core.Application.AppEntry;
 using ViaEventAssociation.Core.Application.Commands.Event;
 using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
 using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
-using ViaEventAssociation.Core.Domain.Common.Fake_stuff;
+using ViaEventAssociation.Core.Domain.Common.FakeStuff;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Application.Handlers.Event {
-    class UpdateEventVisibilityHandler : ICommandHandler<UpdateEventVisibilityCommand> {
+    class UpdateEventStatusHandler : ICommandHandler<UpdateEventStatusCommand> {
         private readonly IEventRepository eventRepository;
         private readonly IUnitOfWork unitOfWork;
 
-        public UpdateEventVisibilityHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) {
+        public UpdateEventStatusHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) {
             this.eventRepository = eventRepository;
             this.unitOfWork = unitOfWork;
         }
-
-        public async Task<Result<UpdateEventVisibilityCommand>> HandleAsync(UpdateEventVisibilityCommand command) {
+        public async Task<Result<UpdateEventStatusCommand>> HandleAsync(UpdateEventStatusCommand command) {
             VEvent vEvent = await eventRepository.GetAsync(command.EventId);
-            Result<Visibility> result = vEvent.UpdateVisibility(command.Visibility);
+            Result<EventStatus> result = vEvent.UpdateStatus(command.Status);
             return command.AddResponse(result);
         }
     }

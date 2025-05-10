@@ -100,7 +100,7 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.EventNS {
         public Result<Location> UpdateLocation(Location location) {
             if(MaxNumberOfGuests.Value > location.MaxCapacity.Value) return new Result<Location>(61, "Max number of guests cannot be higher than max capacity of the location.");
             if (Status == EventStatus.Cancelled) return new Result<Location>(62, "Location cannot be updated when status is cancelled.");
-            if (Status == EventStatus.Active) return new Result<Location>(63, "Location cannot be set to private when status is active.");
+            if (Status == EventStatus.Active) return new Result<Location>(63, "Location cannot be updated when status is active.");
             Location = location;
             return new Result<Location>(Location);
         }

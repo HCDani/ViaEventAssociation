@@ -7,21 +7,21 @@ using ViaEventAssociation.Core.Application.AppEntry;
 using ViaEventAssociation.Core.Application.Commands.Event;
 using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
 using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
-using ViaEventAssociation.Core.Domain.Common.Fake_stuff;
+using ViaEventAssociation.Core.Domain.Common.FakeStuff;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Application.Handlers.Event {
-    class UpdateEventMaxnumberOfGuestsHandler : ICommandHandler<UpdateEventMaxNumberOfGuestsCommand> {
+    class UpdateEventDurationHandler : ICommandHandler<UpdateEventDurationCommand> {
         private readonly IEventRepository eventRepository;
         private readonly IUnitOfWork unitOfWork;
 
-        public UpdateEventMaxnumberOfGuestsHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) {
+        public UpdateEventDurationHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) {
             this.eventRepository = eventRepository;
             this.unitOfWork = unitOfWork;
         }
-        public async Task<Result<UpdateEventMaxNumberOfGuestsCommand>> HandleAsync(UpdateEventMaxNumberOfGuestsCommand command) {
+        public async Task<Result<UpdateEventDurationCommand>> HandleAsync(UpdateEventDurationCommand command) {
             VEvent vEvent = await eventRepository.GetAsync(command.EventId);
-            Result<MaxNumberOfGuests> result = vEvent.UpdateMaxNumberOfGuests(command.MaxNumberOfGuests);
+            Result<EventDuration> result = vEvent.UpdateDuration(command.Duration);
             return command.AddResponse(result);
         }
     }

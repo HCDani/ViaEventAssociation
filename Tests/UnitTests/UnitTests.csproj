@@ -30,7 +30,11 @@
     <ItemGroup>
       <ProjectReference Include="..\..\src\Core\Tools\ViaEventAssociation.Core.Tools.OperationResult\ViaEventAssociation.Core.Tools.OperationResult.csproj" />
       <ProjectReference Include="..\..\src\Core\ViaEventAssociation.Core.Domain\ViaEventAssociation.Core.Domain.csproj" />
-      <ProjectReference Include="..\..\ViaEventAssociation.Core.Application\ViaEventAssociation.Core.Application.csproj" />
+      <ProjectReference Include="..\..\src\Core\ViaEventAssociation.Core.Application\ViaEventAssociation.Core.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Features\Tools\Fakes\" />
     </ItemGroup>
 
 </Project>

@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
-using ViaEventAssociation.Core.Domain.Common.Fake_stuff;
 
-namespace UnitTests.Features.Tools.Fakes {
-    class InMemEventRepoStub : IEventRepository {
+namespace ViaEventAssociation.Core.Domain.Common.FakeStuff {
+    public class InMemEventRepoStub : IEventRepository {
         public Dictionary<Guid, VEvent> events = new Dictionary<Guid, VEvent>();
 
         public Task CreateAsync(VEvent vEvent) {
