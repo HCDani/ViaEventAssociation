@@ -1,0 +1,9 @@
+--- src/Core/ViaEventAssociation.Core.Domain/Aggregates/Event/Values/Description.cs
++++ src/Core/ViaEventAssociation.Core.Domain/Aggregates/Event/Values/Description.cs
+@@ -1,5 +1,6 @@
+ ﻿using System;
+ using System.Collections.Generic;
++using System.ComponentModel.DataAnnotations.Schema;
+ using System.Linq;
+ using System.Text;
+ using System.Threading.Tasks;

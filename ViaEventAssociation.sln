@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViaEventAssociation.Core.Ap
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViaEventAssociation.Infrastructure.Persistence", "ViaEventAssociation\src\Infrastructure\ViaEventAssociation.Infrastructure.Persistence\ViaEventAssociation.Infrastructure.Persistence.csproj", "{774E5B41-8304-4D1C-A4B5-7D6E5536184E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViaEventAssociation.Infrastructure.Persistence", "src\Infrastructure\ViaEventAssociation.Infrastructure.Persistence\ViaEventAssociation.Infrastructure.Persistence.csproj", "{774E5B41-8304-4D1C-A4B5-7D6E5536184E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

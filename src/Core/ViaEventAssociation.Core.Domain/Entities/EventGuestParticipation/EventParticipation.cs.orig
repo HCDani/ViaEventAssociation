@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,10 +14,13 @@ using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation.Contracts
 namespace ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation {
     public class EventParticipation : Entity<Guid> {
         public ParticipationStatus ParticipationStatus { get; private set; }
-        public Guest Guest { get; private set; }
-        public VEvent Event { get; private set; }
+        public Guest Guest { get; }
+        public VEvent Event { get; }
 
-        private EventParticipation(Guid id) : base(id) {
+        private EventParticipation(Guid id, Guest guest, VEvent vEvent, ParticipationStatus status) : base(id) {
+            Guest = guest;
+            Event = vEvent;
+            ParticipationStatus = status;
         }
 
         public static Result<EventParticipation> Create(Guid id, Guest guest, VEvent vEvent, ParticipationStatus participationStatus, IGetEventParticipants eventParticipants) {
@@ -36,7 +39,7 @@ namespace ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation {
             }
             if (vEvent.Status == EventStatus.Active && vEvent.Duration.From < DateTime.Now) return new Result<EventParticipation>(156, "Guest cannot participate in an already active event.");
             
-            return new Result<EventParticipation>(new EventParticipation(id) { ParticipationStatus = participationStatus, Guest = guest, Event = vEvent });
+            return new Result<EventParticipation>(new EventParticipation(id, guest, vEvent, participationStatus));
         }
         public Result<EventParticipation> UpdateStatus(ParticipationStatus status, IGetEventParticipants eventParticipants) {
             if (Event.Status == EventStatus.Cancelled) return new Result<EventParticipation>(157, "Guest cannot participate in a cancelled event.");

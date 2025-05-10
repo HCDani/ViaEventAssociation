@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UnitTests.Features.Tools.Fakes;
 using ViaEventAssociation.Core.Application.AppEntry;
 using ViaEventAssociation.Core.Application.Handlers.Event;
 using ViaEventAssociation.Core.Application.Commands.Event;
-using ViaEventAssociation.Core.Domain.Common.Fake_stuff;
+using ViaEventAssociation.Core.Domain.Common.FakeStuff;
 using ViaEventAssociation.Core.Tools.OperationResult;
 using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
 
