@@ -7,7 +7,8 @@ using ViaEventAssociation.Core.Application.AppEntry;
 using ViaEventAssociation.Core.Application.Commands.Event;
 using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
 using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
-using ViaEventAssociation.Core.Domain.Common.FakeStuff;
+using ViaEventAssociation.Core.Domain.Common.RepoContracts;
+using ViaEventAssociation.Core.Domain.Common.UOWContracts;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Application.Handlers.Event {

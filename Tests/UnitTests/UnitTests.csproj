@@ -33,8 +33,4 @@
       <ProjectReference Include="..\..\src\Core\ViaEventAssociation.Core.Application\ViaEventAssociation.Core.Application.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Features\Tools\Fakes\" />
-    </ItemGroup>
-
 </Project>

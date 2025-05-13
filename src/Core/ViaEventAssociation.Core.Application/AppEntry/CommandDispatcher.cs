@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViaEventAssociation.Core.Tools.OperationResult;
+using ViaEventAssociation.Core.Domain.Common.UOWContracts;
+using ViaEventAssociation.Core.Domain.Common.RepoContracts;
 using ViaEventAssociation.Core.Application.Commands.Event;
 using ViaEventAssociation.Core.Application.Handlers.Event;
-using ViaEventAssociation.Core.Domain.Common.FakeStuff;
-using ViaEventAssociation.Core.Tools.OperationResult;
+using ViaEventAssociation.Infrastructure.Persistence;
+using ViaEventAssociation.Infrastructure.Persistence.UnitOfWork;
+using ViaEventAssociation.Infrastructure.Persistence.Repositories;
 
 namespace ViaEventAssociation.Core.Application.AppEntry {
     public class CommandDispatcher : ICommandDispatcher {
@@ -15,9 +19,11 @@ namespace ViaEventAssociation.Core.Application.AppEntry {
         private readonly IGuestRepository guestRepository;
         private readonly IUnitOfWork unitOfWork;
 
-        public CommandDispatcher() {
-            eventRepository = new InMemEventRepoStub();
-            unitOfWork = new UnitOfWork();
+        public CommandDispatcher(EFCDbContext context) {
+            eventRepository = new EventRepository(context);
+            locationRepository = new LocationRepository(context);
+            guestRepository = new GuestRepository(context);
+            unitOfWork = new UnitOfWork(context);
         }
         public Task<Result<TCommand>> DispatchAsync<TCommand>(TCommand command) {
            Type serviceType = typeof(ICommandHandler<TCommand>);

@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
+using ViaEventAssociation.Core.Domain.Common.RepoContracts;
+using ViaEventAssociation.Infrastructure.Persistence;
+using ViaEventAssociation.Infrastructure.Persistence.Repositories;
+
+namespace UnitTests.Features.Tools.Fakes {
+    public class InMemEventRepoStub : GenericRepository<VEvent>, IEventRepository {
+        public InMemEventRepoStub(EFCDbContext context) : base(context) {
+        }
+    }
+}
