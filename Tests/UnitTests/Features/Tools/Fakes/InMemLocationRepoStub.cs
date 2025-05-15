@@ -10,8 +10,6 @@ using ViaEventAssociation.Infrastructure.Persistence;
 using ViaEventAssociation.Infrastructure.Persistence.Repositories;
 
 namespace UnitTests.Features.Tools.Fakes {
-    public class InMemLocationRepoStub : GenericRepository<Location>, ILocationRepository {
-        public InMemLocationRepoStub(EFCDbContext context) : base(context) {
-        }
+    public class InMemLocationRepoStub : InMemGenericRepoStub<Location>, ILocationRepository {
     }
 }

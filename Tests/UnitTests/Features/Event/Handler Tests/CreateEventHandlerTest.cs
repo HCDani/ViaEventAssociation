@@ -20,10 +20,8 @@ namespace UnitTests.Features.Event.Handler_Tests
         [Fact]
         public async Task CreateEventHandler_ValidInput_CreatesEvent() {
             // Arrange
-            DbContextOptions options = new();
-            EFCDbContext context = new EFCDbContext(options);
             InMemEventRepoStub repo = new ();
-            IUnitOfWork unitOfWork = new FUnitOfWork(context);
+            IUnitOfWork unitOfWork = new FUnitOfWork();
             ICommandHandler<CreateEventCommand> handler = new CreateEventHandler(repo, unitOfWork);
 
             CreateEventCommand command = CreateEventCommand.Create().payLoad;
@@ -33,9 +31,9 @@ namespace UnitTests.Features.Event.Handler_Tests
 
             // Assert
             Assert.True(result.resultCode == 0);
-            Assert.Single(repo.events);
+            Assert.Single(repo.table);
 
-            VEvent vEvent = repo.events.First().Value;
+            VEvent vEvent = repo.table.First().Value;
             Assert.Equal(result.payLoad.EventId, vEvent.Id);
         }
     }

@@ -11,6 +11,8 @@ using ViaEventAssociation.Core.Application.Handlers.Event;
 using ViaEventAssociation.Infrastructure.Persistence;
 using ViaEventAssociation.Infrastructure.Persistence.UnitOfWork;
 using ViaEventAssociation.Infrastructure.Persistence.Repositories;
+using ViaEventAssociation.Core.Application.Commands.GuestNS;
+using ViaEventAssociation.Core.Application.Handlers.GuestNS;
 
 namespace ViaEventAssociation.Core.Application.AppEntry {
     public class CommandDispatcher : ICommandDispatcher {
@@ -49,6 +51,12 @@ namespace ViaEventAssociation.Core.Application.AppEntry {
                     break;
                 case Type t when t == typeof(ICommandHandler<CreateEventCommand>):
                     handler = (ICommandHandler<TCommand>)new UpdateEventVisibilityHandler(eventRepository, unitOfWork);
+                    break;
+                case Type t when t == typeof(ICommandHandler<CreateEventCommand>):
+                    handler = (ICommandHandler<TCommand>)new UpdateEventLocationHandler(eventRepository, locationRepository, unitOfWork);
+                    break;
+                case Type t when t == typeof(ICommandHandler<RegisterGuestCommand>):
+                    handler = (ICommandHandler<TCommand>)new RegisterGuestHandler(guestRepository, unitOfWork);
                     break;
                 // Add more cases for other command handlers as needed
                 default:

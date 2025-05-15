@@ -9,8 +9,6 @@ using ViaEventAssociation.Infrastructure.Persistence;
 using ViaEventAssociation.Infrastructure.Persistence.Repositories;
 
 namespace UnitTests.Features.Tools.Fakes {
-    public class InMemEventRepoStub : GenericRepository<VEvent>, IEventRepository {
-        public InMemEventRepoStub(EFCDbContext context) : base(context) {
-        }
+    public class InMemEventRepoStub : InMemGenericRepoStub<VEvent>, IEventRepository {
     }
 }
