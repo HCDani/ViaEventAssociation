@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace ViaEventAssociation.Core.Domain.Common.UOWContracts {
     public interface IUnitOfWork {
-        Task SaveChangesASync();
+        public Task SaveChangesASync();
     }
 }

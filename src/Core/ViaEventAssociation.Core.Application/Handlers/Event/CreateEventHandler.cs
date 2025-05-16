@@ -22,6 +22,7 @@ namespace ViaEventAssociation.Core.Application.Handlers.Event {
         public async Task<Result<CreateEventCommand>> HandleAsync(CreateEventCommand command) {
             VEvent vEvent = VEvent.Create(Guid.NewGuid());
             await eventRepository.CreateAsync(vEvent);
+            await unitOfWork.SaveChangesASync();
             return command.AddResponse(vEvent.Id);
         }
     }

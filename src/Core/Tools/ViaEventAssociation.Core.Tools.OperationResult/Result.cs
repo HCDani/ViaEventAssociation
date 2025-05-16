@@ -55,5 +55,8 @@ namespace ViaEventAssociation.Core.Tools.OperationResult
             }
             return this;
         }
+        public bool IsSuccess() {
+            return resultCode == 0;
+        }
     }
 }

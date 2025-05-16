@@ -15,5 +15,10 @@ namespace IntegrationTests {
             EFCDbContext context = new EFCDbContext(optionsBuilder.Options);
             return context;
         }
+
+        public static void InitializeDatabase(EFCDbContext context) {
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+        }
     }
 }
