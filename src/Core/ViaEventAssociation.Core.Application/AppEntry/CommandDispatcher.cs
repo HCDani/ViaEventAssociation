@@ -13,6 +13,8 @@ using ViaEventAssociation.Infrastructure.Persistence.UnitOfWork;
 using ViaEventAssociation.Infrastructure.Persistence.Repositories;
 using ViaEventAssociation.Core.Application.Commands.GuestNS;
 using ViaEventAssociation.Core.Application.Handlers.GuestNS;
+using ViaEventAssociation.Core.Application.Commands.LocationNS;
+using ViaEventAssociation.Core.Application.Handlers.LocationNS;
 
 namespace ViaEventAssociation.Core.Application.AppEntry {
     public class CommandDispatcher : ICommandDispatcher {
@@ -57,6 +59,9 @@ namespace ViaEventAssociation.Core.Application.AppEntry {
                     break;
                 case Type t when t == typeof(ICommandHandler<RegisterGuestCommand>):
                     handler = (ICommandHandler<TCommand>)new RegisterGuestHandler(guestRepository, unitOfWork);
+                    break;
+                case Type t when t == typeof(ICommandHandler<CreateLocationCommand>):
+                    handler = (ICommandHandler<TCommand>)new CreateLocationHandler(locationRepository, unitOfWork);
                     break;
                 // Add more cases for other command handlers as needed
                 default:

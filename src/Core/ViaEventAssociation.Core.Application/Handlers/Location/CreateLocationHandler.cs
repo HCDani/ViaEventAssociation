@@ -22,9 +22,9 @@ namespace ViaEventAssociation.Core.Application.Handlers.LocationNS {
             this.unitOfWork = unitOfWork;
         }
         public async Task<Result<CreateLocationCommand>> HandleAsync(CreateLocationCommand command) {
-            Result<Location> rLocation = Location.Create(Guid.NewGuid(), command.Address, command.Availability, command.LocationName, command.MaxCapacity);
+            Result<Location> rLocation = Location.Create(Guid.NewGuid(), command.LocationName, command.MaxCapacity, command.Availability, command.Address);
             if (rLocation.resultCode == 0) {
-                await guestRepository.CreateAsync(rLocation.payLoad);
+                await locationRepository.CreateAsync(rLocation.payLoad);
             }
             return command.AddResponse(rLocation);
         }

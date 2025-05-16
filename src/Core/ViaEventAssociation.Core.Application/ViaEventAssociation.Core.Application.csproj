@@ -10,9 +10,7 @@
     <Folder Include="AppEntry\Event\" />
     <Folder Include="AppEntry\Guest\" />
     <Folder Include="AppEntry\Location\" />
-    <Folder Include="Commands\Location\" />
     <Folder Include="Handlers\Guest\" />
-    <Folder Include="Handlers\Location\" />
   </ItemGroup>
 
   <ItemGroup>
