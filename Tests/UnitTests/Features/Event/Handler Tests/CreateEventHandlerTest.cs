@@ -22,12 +22,12 @@ namespace UnitTests.Features.Event.Handler_Tests
             // Arrange
             InMemEventRepoStub repo = new ();
             IUnitOfWork unitOfWork = new FUnitOfWork();
-            ICommandHandler<CreateEventCommand> handler = new CreateEventHandler(repo, unitOfWork);
+            ICommandHandler<UpdateEventMaxnumberOfGuestsCommand> handler = new CreateEventHandler(repo, unitOfWork);
 
-            CreateEventCommand command = CreateEventCommand.Create().payLoad;
+            UpdateEventMaxnumberOfGuestsCommand command = UpdateEventMaxnumberOfGuestsCommand.Create().payLoad;
 
             // Act
-            Result<CreateEventCommand> result = await handler.HandleAsync(command);
+            Result<UpdateEventMaxnumberOfGuestsCommand> result = await handler.HandleAsync(command);
 
             // Assert
             Assert.True(result.resultCode == 0);

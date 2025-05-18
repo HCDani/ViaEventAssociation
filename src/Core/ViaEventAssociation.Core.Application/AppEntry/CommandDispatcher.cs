@@ -16,6 +16,7 @@ using ViaEventAssociation.Core.Application.Handlers.GuestNS;
 using ViaEventAssociation.Core.Application.Commands.LocationNS;
 using ViaEventAssociation.Core.Application.Handlers.LocationNS;
 
+
 namespace ViaEventAssociation.Core.Application.AppEntry {
     public class CommandDispatcher : ICommandDispatcher {
         private readonly IEventRepository eventRepository;
@@ -33,35 +34,44 @@ namespace ViaEventAssociation.Core.Application.AppEntry {
            Type serviceType = typeof(ICommandHandler<TCommand>);
             ICommandHandler<TCommand> handler = null;
             switch (serviceType) {
-                case Type t when t == typeof(ICommandHandler<CreateEventCommand>):
+                case Type t when t == typeof(ICommandHandler<UpdateEventMaxnumberOfGuestsCommand>):
                     handler = (ICommandHandler<TCommand>) new CreateEventHandler(eventRepository, unitOfWork);
                     break;
-                case Type t when t == typeof(ICommandHandler<CreateEventCommand>):
+                case Type t when t == typeof(ICommandHandler<UpdateEventDescriptionCommand>):
                     handler = (ICommandHandler<TCommand>)new UpdateEventDescriptionHandler(eventRepository, unitOfWork);
                     break;
-                case Type t when t == typeof(ICommandHandler<CreateEventCommand>):
+                case Type t when t == typeof(ICommandHandler<UpdateEventDurationCommand>):
                     handler = (ICommandHandler<TCommand>)new UpdateEventDurationHandler(eventRepository, unitOfWork);
                     break;
-                case Type t when t == typeof(ICommandHandler<CreateEventCommand>):
+                case Type t when t == typeof(ICommandHandler<UpdateEventMaxnumberOfGuestsCommand>):
                     handler = (ICommandHandler<TCommand>)new UpdateEventMaxnumberOfGuestsHandler(eventRepository, unitOfWork);
                     break;
-                case Type t when t == typeof(ICommandHandler<CreateEventCommand>):
+                case Type t when t == typeof(ICommandHandler<UpdateEventStatusCommand>):
                     handler = (ICommandHandler<TCommand>)new UpdateEventStatusHandler(eventRepository, unitOfWork);
                     break;
-                case Type t when t == typeof(ICommandHandler<CreateEventCommand>):
+                case Type t when t == typeof(ICommandHandler<UpdateEventTitleCommand>):
                     handler = (ICommandHandler<TCommand>)new UpdateEventTitleHandler(eventRepository, unitOfWork);
                     break;
-                case Type t when t == typeof(ICommandHandler<CreateEventCommand>):
+                case Type t when t == typeof(ICommandHandler<UpdateEventVisibilityCommand>):
                     handler = (ICommandHandler<TCommand>)new UpdateEventVisibilityHandler(eventRepository, unitOfWork);
                     break;
-                case Type t when t == typeof(ICommandHandler<CreateEventCommand>):
+                case Type t when t == typeof(ICommandHandler<UpdateEventLocationCommand>):
                     handler = (ICommandHandler<TCommand>)new UpdateEventLocationHandler(eventRepository, locationRepository, unitOfWork);
+                    break;
+                case Type t when t == typeof(ICommandHandler<GetEventByIdCommand>):
+                    handler = (ICommandHandler<TCommand>)new GetEventByIdHandler(eventRepository,unitOfWork);
                     break;
                 case Type t when t == typeof(ICommandHandler<RegisterGuestCommand>):
                     handler = (ICommandHandler<TCommand>)new RegisterGuestHandler(guestRepository, unitOfWork);
                     break;
+                case Type t when t == typeof(ICommandHandler<GetGuestByIdCommand>):
+                    handler = (ICommandHandler<TCommand>)new GetGuestByIdHandler(guestRepository, unitOfWork);
+                    break;
                 case Type t when t == typeof(ICommandHandler<CreateLocationCommand>):
                     handler = (ICommandHandler<TCommand>)new CreateLocationHandler(locationRepository, unitOfWork);
+                    break;
+                case Type t when t == typeof(ICommandHandler<GetLocationByIdCommand>):
+                    handler = (ICommandHandler<TCommand>)new GetLocationByIdHandler(locationRepository, unitOfWork);
                     break;
                 // Add more cases for other command handlers as needed
                 default:

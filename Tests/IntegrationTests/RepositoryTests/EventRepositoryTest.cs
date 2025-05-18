@@ -29,10 +29,10 @@ namespace IntegrationTests.RepositoryTests {
             using (var context = GlobalUsings.CreateDbContext()) {
                 CommandDispatcher cd = new CommandDispatcher(context);
                 // Act
-                CreateEventCommand cec = CreateEventCommand.Create().payLoad;
-                Task<Result<CreateEventCommand>> res = cd.DispatchAsync(cec);
+                UpdateEventMaxnumberOfGuestsCommand cec = UpdateEventMaxnumberOfGuestsCommand.Create().payLoad;
+                Task<Result<UpdateEventMaxnumberOfGuestsCommand>> res = cd.DispatchAsync(cec);
                 res.Wait();
-                Result<CreateEventCommand> cecr = res.Result;
+                Result<UpdateEventMaxnumberOfGuestsCommand> cecr = res.Result;
                 Assert.IsTrue(cecr.IsSuccess());
 
                 var eventRepository = new EventRepository(context);

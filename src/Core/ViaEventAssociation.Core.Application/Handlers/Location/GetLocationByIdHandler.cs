@@ -11,20 +11,17 @@ using ViaEventAssociation.Core.Domain.Common.UOWContracts;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Application.Handlers.LocationNS {
-    public class CreateLocationHandler : ICommandHandler<CreateLocationCommand> {
+    public class GetLocationByIdHandler : ICommandHandler<GetLocationByIdCommand> {
         private readonly ILocationRepository locationRepository;
         private readonly IUnitOfWork unitOfWork;
-
-        public CreateLocationHandler(ILocationRepository locationRepository, IUnitOfWork unitOfWork) {
+        public GetLocationByIdHandler(ILocationRepository locationRepository, IUnitOfWork unitOfWork) {
             this.locationRepository = locationRepository;
             this.unitOfWork = unitOfWork;
         }
-        public async Task<Result<CreateLocationCommand>> HandleAsync(CreateLocationCommand command) {
-            Result<Location> rLocation = Location.Create(Guid.NewGuid(), command.LocationName, command.MaxCapacity, command.Availability, command.Address);
-            if (rLocation.resultCode == 0) {
-                await locationRepository.CreateAsync(rLocation.payLoad);
-            }
-            return command.AddResponse(rLocation);
+        public async Task<Result<GetLocationByIdCommand>> HandleAsync(GetLocationByIdCommand command) {
+            Location location = await locationRepository.GetAsync(command.LocationId);
+            await unitOfWork.SaveChangesASync();
+            return command.AddResponse(location.Id);
         }
     }
 }

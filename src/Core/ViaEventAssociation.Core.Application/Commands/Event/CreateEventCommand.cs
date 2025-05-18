@@ -9,17 +9,17 @@ using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Application.Commands.Event {
-    public class CreateEventCommand {
+    public class UpdateEventMaxnumberOfGuestsCommand {
 
-        private CreateEventCommand() {
+        private UpdateEventMaxnumberOfGuestsCommand() {
         }
-        public static Result<CreateEventCommand> Create() {
-            return new Result<CreateEventCommand>(new CreateEventCommand());
+        public static Result<UpdateEventMaxnumberOfGuestsCommand> Create() {
+            return new Result<UpdateEventMaxnumberOfGuestsCommand>(new UpdateEventMaxnumberOfGuestsCommand());
         }
         public Guid EventId { get; set; }
-        public Result<CreateEventCommand> AddResponse(Guid eventId) {
+        public Result<UpdateEventMaxnumberOfGuestsCommand> AddResponse(Guid eventId) {
             EventId = eventId;
-            return new Result<CreateEventCommand> (this);
+            return new Result<UpdateEventMaxnumberOfGuestsCommand> (this);
         }
     }
 }

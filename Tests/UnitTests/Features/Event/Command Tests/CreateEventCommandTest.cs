@@ -13,8 +13,8 @@ namespace UnitTests.Features.Event.Command_Tests
         [Fact]
         public void CreateEventCommand_ValidInput_CreatesEvent() {
             // Arrange
-            Result<CreateEventCommand> result = CreateEventCommand.Create();
-            CreateEventCommand command = result.payLoad;
+            Result<UpdateEventMaxnumberOfGuestsCommand> result = UpdateEventMaxnumberOfGuestsCommand.Create();
+            UpdateEventMaxnumberOfGuestsCommand command = result.payLoad;
 
             // Act
             // Assert
