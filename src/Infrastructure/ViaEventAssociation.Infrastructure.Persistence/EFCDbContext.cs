@@ -25,58 +25,60 @@ namespace ViaEventAssociation.Infrastructure.Persistence {
                 builder.HasKey(g => g.Id);
                 builder.OwnsOne(v => v.Description, descriptionBuilder => {
                     descriptionBuilder.Property(d => d.Value)
-                        .HasColumnName("Description"); // Column name in the VEvent table
+                        .HasColumnName("Description").IsRequired(false); // Column name in the VEvent table
                 });
                 // Configure EventDuration as an owned type
                 builder.OwnsOne(v => v.Duration, durationBuilder => {
                     durationBuilder.Property(d => d.From)
-                        .HasColumnName("DurationFrom"); // Column name for the 'From' property
+                        .HasColumnName("DurationFrom").IsRequired(false); // Column name for the 'From' property
 
                     durationBuilder.Property(d => d.To)
-                        .HasColumnName("DurationTo"); // Column name for the 'To' property
+                        .HasColumnName("DurationTo").IsRequired(false); // Column name for the 'To' property
                 });
                 builder.OwnsOne(v => v.MaxNumberOfGuests, maxNumberOfGuestBuilder => {
                     maxNumberOfGuestBuilder.Property(d => d.Value)
-                        .HasColumnName("MaxNumberOfGuests"); // Column name in the VEvent table
+                        .HasColumnName("MaxNumberOfGuests").IsRequired(false); // Column name in the VEvent table
                 });
                 builder.OwnsOne(v => v.Title, titleBuilder => {
                     titleBuilder.Property(d => d.Value)
-                        .HasColumnName("Title"); // Column name in the VEvent table
+                        .HasColumnName("Title").IsRequired(false); // Column name in the VEvent table
                 });
+                builder.HasOne<Location>(v => v.Location).WithMany().IsRequired(false);
+                //                builder.HasMany<Location>(v => v.Locations).WithOne(l => l.VEvent).HasForeignKey(l => l.VEventId).OnDelete(DeleteBehavior.Cascade);
 
             });
             // Configure Guest value objects as an owned type
             modelBuilder.Entity<Guest>(builder => {
                 builder.HasKey(g => g.Id);
                 builder.OwnsOne(v => v.Email, emailBuilder => {
-                    emailBuilder.Property(d => d.Value).HasColumnName("Email");
+                    emailBuilder.Property(d => d.Value).HasColumnName("Email").IsRequired(false);
                 });
                 builder.OwnsOne(v => v.Name, nameBuilder => {
-                    nameBuilder.Property(d => d.FirstName).HasColumnName("FirstName");
-                    nameBuilder.Property(d => d.LastName).HasColumnName("LastName");
+                    nameBuilder.Property(d => d.FirstName).HasColumnName("FirstName").IsRequired(false);
+                    nameBuilder.Property(d => d.LastName).HasColumnName("LastName").IsRequired(false);
                 });
                 builder.OwnsOne(v => v.ProfilePictureUrl, profilePictureUrlBuilder => {
-                    profilePictureUrlBuilder.Property(d => d.Value).HasColumnName("PPUrl");
+                    profilePictureUrlBuilder.Property(d => d.Value).HasColumnName("PPUrl").IsRequired(false);
                 });
             });
             // Configure Location value objects as an owned type
             modelBuilder.Entity<Location>(builder => {
                 builder.HasKey(g => g.Id);
                 builder.OwnsOne(v => v.LocationName, locationNameBuilder => {
-                    locationNameBuilder.Property(d => d.Value).HasColumnName("LocationName");
+                    locationNameBuilder.Property(d => d.Value).HasColumnName("LocationName").IsRequired(false);
                 });
                 builder.OwnsOne(v => v.MaxCapacity, maxCapacityBuilder => {
-                    maxCapacityBuilder.Property(d => d.Value).HasColumnName("MaxCapacity");
+                    maxCapacityBuilder.Property(d => d.Value).HasColumnName("MaxCapacity").IsRequired(false);
                 });
                 builder.OwnsOne(v => v.Availability, availabilityBuilder => {
-                    availabilityBuilder.Property(d => d.From).HasColumnName("AvailabilityFrom");
-                    availabilityBuilder.Property(d => d.To).HasColumnName("AvailabilityTo");
+                    availabilityBuilder.Property(d => d.From).HasColumnName("AvailabilityFrom").IsRequired(false);
+                    availabilityBuilder.Property(d => d.To).HasColumnName("AvailabilityTo").IsRequired(false);
                 });
                 builder.OwnsOne(v => v.Address, addressBuilder => {
-                    addressBuilder.Property(d => d.Street).HasColumnName("Street");
-                    addressBuilder.Property(d => d.City).HasColumnName("City");
-                    addressBuilder.Property(d => d.HouseNumber).HasColumnName("HouseNumber");
-                    addressBuilder.Property(d => d.PostalCode).HasColumnName("PostalCode");
+                    addressBuilder.Property(d => d.Street).HasColumnName("Street").IsRequired(false);
+                    addressBuilder.Property(d => d.City).HasColumnName("City").IsRequired(false);
+                    addressBuilder.Property(d => d.HouseNumber).HasColumnName("HouseNumber").IsRequired(false);
+                    addressBuilder.Property(d => d.PostalCode).HasColumnName("PostalCode").IsRequired(false);
                 });
             });
             // Configure Location value objects as an owned type

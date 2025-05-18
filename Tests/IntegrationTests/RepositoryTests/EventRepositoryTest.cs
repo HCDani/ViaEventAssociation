@@ -17,7 +17,7 @@ namespace IntegrationTests.RepositoryTests {
     public class EventRepositoryTest {
 
         [ClassInitialize]
-        public void Initialize() {
+        public static void Initialize(TestContext _1) {
             using (var dbContext = GlobalUsings.CreateDbContext()) {
                 GlobalUsings.InitializeDatabase(dbContext);
             }
@@ -26,20 +26,27 @@ namespace IntegrationTests.RepositoryTests {
         [TestMethod]
         public void TestEventRepository() {
             // Arrange
+            Guid createdEventId = Guid.Empty;
             using (var context = GlobalUsings.CreateDbContext()) {
-                CommandDispatcher cd = new CommandDispatcher(context);
+                CommandDispatcher cd = new (context);
                 // Act
                 UpdateEventMaxnumberOfGuestsCommand cec = UpdateEventMaxnumberOfGuestsCommand.Create().payLoad;
                 Task<Result<UpdateEventMaxnumberOfGuestsCommand>> res = cd.DispatchAsync(cec);
                 res.Wait();
                 Result<UpdateEventMaxnumberOfGuestsCommand> cecr = res.Result;
                 Assert.IsTrue(cecr.IsSuccess());
-
-                var eventRepository = new EventRepository(context);
-                var retrievedEvent = eventRepository.GetAsync(cecr.payLoad.EventId);
+                createdEventId = cecr.payLoad.EventId;
+            }
+            using (var assertcontext = GlobalUsings.CreateDbContext()) {
+                CommandDispatcher cd = new (assertcontext);
+                GetEventByIdCommand getEventByIdCommand = GetEventByIdCommand.Create(createdEventId.ToString()).payLoad;
+                Task<Result<GetEventByIdCommand>> res = cd.DispatchAsync(getEventByIdCommand);
+                res.Wait();
+                Result<GetEventByIdCommand> ger = res.Result;
                 // Assert
-                Assert.IsNotNull(retrievedEvent);
-                Assert.Equals(cecr.payLoad.EventId, retrievedEvent.Id);
+                Assert.IsTrue(ger.IsSuccess());
+                Assert.IsNotNull(ger.payLoad.VEvent);
+                Assert.AreEqual(ger.payLoad.VEvent.Id, createdEventId);
             }
         }
     }

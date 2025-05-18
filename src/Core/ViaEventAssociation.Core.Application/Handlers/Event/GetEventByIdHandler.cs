@@ -11,18 +11,13 @@ using ViaEventAssociation.Core.Domain.Common.UOWContracts;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Application.Handlers.Event {
-    public class GetEventByIdHandler : ICommandHandler<GetEventByIdCommand> {
-        private readonly IEventRepository eventRepository;
-        private readonly IUnitOfWork unitOfWork;
+    public class GetEventByIdHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) : ICommandHandler<GetEventByIdCommand> {
+        private readonly IEventRepository eventRepository = eventRepository;
+        private readonly IUnitOfWork unitOfWork = unitOfWork;
 
-        public GetEventByIdHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) {
-            this.eventRepository = eventRepository;
-            this.unitOfWork = unitOfWork;
-        }
         public async Task<Result<GetEventByIdCommand>> HandleAsync(GetEventByIdCommand command) {
             VEvent vEvent = await eventRepository.GetAsync(command.EventId);
-            await unitOfWork.SaveChangesASync();
-            return command.AddResponse(vEvent.Id);
+            return command.AddResponse(vEvent);
         }
     }
 }

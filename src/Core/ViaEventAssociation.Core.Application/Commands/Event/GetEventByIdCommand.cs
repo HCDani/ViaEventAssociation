@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Application.Commands.Event {
     public class GetEventByIdCommand {
         public Guid EventId { get; }
-        public GetEventByIdCommand(Guid eventId) {
+        private GetEventByIdCommand(Guid eventId) {
             EventId = eventId;
         }
         public static Result<GetEventByIdCommand> Create(string eventId) {
@@ -20,7 +21,10 @@ namespace ViaEventAssociation.Core.Application.Commands.Event {
             }
             return new Result<GetEventByIdCommand>(new GetEventByIdCommand(parsedEventId));
         }
-        public Result<GetEventByIdCommand> AddResponse(Guid eventId) {
+
+        public VEvent? VEvent { get; private set; }
+        public Result<GetEventByIdCommand> AddResponse(VEvent vevent) {
+            VEvent = vevent;
             return new Result<GetEventByIdCommand>(this);
         }
     }

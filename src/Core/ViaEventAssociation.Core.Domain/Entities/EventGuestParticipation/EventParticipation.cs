@@ -47,7 +47,7 @@ namespace ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation {
             EventParticipation? participant = participations.Find(participant => participant.Guest.Id == Guest.Id);
             if (participant == null) return new Result<EventParticipation>(151, "Guest cannot be null.");
             int participationCount = participations.FindAll(participant => participant.ParticipationStatus == ParticipationStatus.Participating).Count();
-            int maxNumberOfGuests = Event.MaxNumberOfGuests.Value;
+            int? maxNumberOfGuests = Event.MaxNumberOfGuests.Value;
             if (participationCount == maxNumberOfGuests) {
                 return new Result<EventParticipation>(155, "The event is full.");
             }
