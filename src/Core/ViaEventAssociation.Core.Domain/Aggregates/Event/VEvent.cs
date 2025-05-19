@@ -11,7 +11,7 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.EventNS {
         public EventStatus Status { get; private set; }
         public Visibility Visibility { get; private set; }
         public MaxNumberOfGuests MaxNumberOfGuests { get; private set; }
-        public Location Location { get; private set; }
+        public Location? Location { get; private set; }
 
         private VEvent(Guid id) : base(id) {
             Title = Title.Default;

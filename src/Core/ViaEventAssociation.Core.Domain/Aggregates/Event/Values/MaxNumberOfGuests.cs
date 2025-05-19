@@ -9,9 +9,9 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 namespace ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values {
     public record MaxNumberOfGuests {
         public static readonly MaxNumberOfGuests Default = new(5);
-        public int Value { get; }
+        public int? Value { get; }
 
-        private MaxNumberOfGuests(int value) {
+        private MaxNumberOfGuests(int? value) {
             Value = value;
         }
         public static Result<MaxNumberOfGuests> Create(int? value) {

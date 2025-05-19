@@ -2,19 +2,19 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.LocationNS.Values {
     public record Address {
-        public int PostalCode { get; }
-        public string City { get; }
-        public string Street { get; }
-        public int HouseNumber { get; }
+        public int? PostalCode { get; }
+        public string? City { get; }
+        public string? Street { get; }
+        public int? HouseNumber { get; }
 
-        private Address(int postalCode, string city, string street, int houseNumber) {
+        private Address(int? postalCode, string? city, string? street, int? houseNumber) {
             PostalCode = postalCode;
             City = city;
             Street = street;
             HouseNumber = houseNumber;
         }
         public static Result<Address> Create(int? postalCode, string? city, string? street, int? houseNumber) {
-            return Validate(postalCode, city, street, houseNumber) ?? new Result<Address>(new Address((int)postalCode,(string)city,(string)street,(int)houseNumber));
+            return Validate(postalCode, city, street, houseNumber) ?? new Result<Address>(new Address(postalCode,city,street,houseNumber));
         }
         private static Result<Address>? Validate(int? postalCode, string? city, string? street, int? houseNumber) {
             if (postalCode == null || postalCode < 1000 || postalCode > 9999) return new Result<Address>(71, "Invalid Postal Code.");

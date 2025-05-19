@@ -3,10 +3,10 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 namespace ViaEventAssociation.Core.Domain.Aggregates.LocationNS.Values {
     public record Availability
     {
-        public DateTime From { get; }
-        public DateTime To { get; }
+        public Nullable<DateTime> From { get; }
+        public Nullable<DateTime> To { get; }
 
-        private Availability(DateTime from, DateTime to)
+        private Availability(Nullable<DateTime> from, Nullable<DateTime> to)
         {
             From = from;
             To = to;

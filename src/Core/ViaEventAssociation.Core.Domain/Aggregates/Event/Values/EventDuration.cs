@@ -7,9 +7,9 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values {
     public record EventDuration {
-        public DateTime From { get; }
-        public DateTime To { get; }
-        private EventDuration(DateTime from, DateTime to) {
+        public Nullable<DateTime> From { get; }
+        public Nullable<DateTime> To { get; }
+        private EventDuration(Nullable<DateTime> from, Nullable<DateTime> to) {
             From = from;
             To = to;
         }
