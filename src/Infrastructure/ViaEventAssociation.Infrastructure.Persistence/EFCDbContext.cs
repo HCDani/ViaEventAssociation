@@ -14,7 +14,7 @@ namespace ViaEventAssociation.Infrastructure.Persistence {
             var path = Environment.GetFolderPath(folder);
             var DbPath = System.IO.Path.Join(path, "viaeventassociation.db");
             optionsBuilder.UseSqlite($"Data Source = {DbPath}");
-            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+           
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {

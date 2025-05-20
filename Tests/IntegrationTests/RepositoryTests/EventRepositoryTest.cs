@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ViaEventAssociation.Core.Application.AppEntry;
 using ViaEventAssociation.Core.Application.Commands.Event;
+using ViaEventAssociation.Core.Application.Commands.LocationNS;
 using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
 using ViaEventAssociation.Core.Tools.OperationResult;
 using ViaEventAssociation.Infrastructure.Persistence;
@@ -30,6 +31,7 @@ namespace IntegrationTests.RepositoryTests {
                 using (var assertcontext = GlobalUsings.CreateDbContext()) {
                     CommandDispatcher cd = new (context);
                     CommandDispatcher acd = new(assertcontext);
+                    CreateLocationCommand clc = GlobalUsings.executeCommand(cd, CreateLocationCommand.Create("1111", "Test City","Test Street", "5", "2025-05-20", "2025-05-21", "Test Name", "15"));
                     // Act Create
                     CreateEventCommand cecr = GlobalUsings.executeCommand(cd, CreateEventCommand.Create());
                     Guid createdEventId = cecr.EventId;
@@ -55,6 +57,14 @@ namespace IntegrationTests.RepositoryTests {
                     Assert.IsNotNull(ger.VEvent);
                     Assert.IsNotNull(ger.VEvent.Duration.From);
                     Assert.IsNotNull(ger.VEvent.Duration.To);
+
+                    // Act UpdateEventLocation
+                    UpdateEventLocationCommand uelc = GlobalUsings.executeCommand(cd, UpdateEventLocationCommand.Create(createdEventId.ToString(), clc.LocationId.ToString()));
+                    ger = GlobalUsings.executeCommand(acd, GetEventByIdCommand.Create(createdEventId.ToString()));
+
+                    // Assert UpdateEventLocation
+                    Assert.IsNotNull(ger.VEvent);
+                    Assert.IsNotNull(ger.VEvent.Location);
                 }
             }
         }

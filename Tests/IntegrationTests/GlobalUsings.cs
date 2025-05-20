@@ -15,7 +15,8 @@ namespace IntegrationTests {
     public class GlobalUsings {
         public static EFCDbContext CreateDbContext() {
             var optionsBuilder = new DbContextOptionsBuilder<EFCDbContext>();
-            optionsBuilder.UseSqlite("Data Source=test.db");
+            optionsBuilder.LogTo(Console.WriteLine);
+            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             EFCDbContext context = new EFCDbContext(optionsBuilder.Options);
             return context;
         }
