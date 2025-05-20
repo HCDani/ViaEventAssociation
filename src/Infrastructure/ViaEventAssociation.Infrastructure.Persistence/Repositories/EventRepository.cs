@@ -10,5 +10,10 @@ namespace ViaEventAssociation.Infrastructure.Persistence.Repositories {
     public class EventRepository : GenericRepository<VEvent> , IEventRepository{
         public EventRepository(EFCDbContext context) : base(context) {
         }
+         public async new Task<VEvent> GetAsync(Guid id) {
+            VEvent vevent = await context.Set<VEvent>().FindAsync(id);
+            await context.Entry(vevent).Reference(b => b.Location).LoadAsync();
+            return vevent;
+        }
     }
 }

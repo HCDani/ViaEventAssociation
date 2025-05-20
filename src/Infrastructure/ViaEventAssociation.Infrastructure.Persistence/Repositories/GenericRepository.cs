@@ -7,7 +7,12 @@ using ViaEventAssociation.Core.Domain.Common.Bases;
 using ViaEventAssociation.Core.Domain.Common.RepoContracts;
 
 namespace ViaEventAssociation.Infrastructure.Persistence.Repositories {
-    public class GenericRepository<T>(EFCDbContext context) : IGenericRepository<T> where T : class {
+    public class GenericRepository<T> : IGenericRepository<T> where T : Entity<Guid> {
+        protected readonly EFCDbContext context;
+
+        public GenericRepository(EFCDbContext _context) {
+            context = _context;
+        }
         public async Task CreateAsync(T entity) {
             await context.Set<T>().AddAsync(entity);
             await context.SaveChangesAsync();

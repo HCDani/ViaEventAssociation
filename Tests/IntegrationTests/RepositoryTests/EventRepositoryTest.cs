@@ -27,45 +27,75 @@ namespace IntegrationTests.RepositoryTests {
         [TestMethod]
         public void TestEventRepository() {
             // Arrange
-            using (var context = GlobalUsings.CreateDbContext()) {
-                using (var assertcontext = GlobalUsings.CreateDbContext()) {
-                    CommandDispatcher cd = new (context);
-                    CommandDispatcher acd = new(assertcontext);
-                    CreateLocationCommand clc = GlobalUsings.executeCommand(cd, CreateLocationCommand.Create("1111", "Test City","Test Street", "5", "2025-05-20", "2025-05-21", "Test Name", "15"));
-                    // Act Create
-                    CreateEventCommand cecr = GlobalUsings.executeCommand(cd, CreateEventCommand.Create());
-                    Guid createdEventId = cecr.EventId;
+            using (var ctx = GlobalUsings.CreateDbContext()) {
+                CommandDispatcher cd = new (ctx);
+                CreateLocationCommand clc = GlobalUsings.executeCommand(ctx, cd, CreateLocationCommand.Create("1111", "Test City","Test Street", "5", "2025-05-20", "2025-05-21", "Test Name", "15"));
+                // Act Create
+                CreateEventCommand cecr = GlobalUsings.executeCommand(ctx, cd, CreateEventCommand.Create());
+                Guid createdEventId = cecr.EventId;
 
-                    GetEventByIdCommand ger = GlobalUsings.executeCommand(acd, GetEventByIdCommand.Create(createdEventId.ToString()));
-                    // Assert Create
-                    Assert.IsNotNull(ger.VEvent);
-                    Assert.AreEqual(createdEventId,ger.VEvent.Id);
+                GetEventByIdCommand ger = GlobalUsings.executeCommand(ctx, cd, GetEventByIdCommand.Create(createdEventId.ToString()));
+                // Assert Create
+                Assert.IsNotNull(ger.VEvent);
+                Assert.AreEqual(createdEventId,ger.VEvent.Id);
 
-                    // Act UpdateEventDescription
-                    UpdateEventDescriptionCommand uedc = GlobalUsings.executeCommand(cd, UpdateEventDescriptionCommand.Create(createdEventId.ToString(), "New Description"));
-                    ger = GlobalUsings.executeCommand(acd, GetEventByIdCommand.Create(createdEventId.ToString()));
+                // Act UpdateEventDescription
+                UpdateEventDescriptionCommand uedc = GlobalUsings.executeCommand(ctx, cd, UpdateEventDescriptionCommand.Create(createdEventId.ToString(), "New Description"));
+                ger = GlobalUsings.executeCommand(ctx, cd, GetEventByIdCommand.Create(createdEventId.ToString()));
 
-                    // Assert UpdateEventDescription
-                    Assert.IsNotNull(ger.VEvent);
-                    Assert.AreEqual("New Description", ger.VEvent.Description.Value);
+                // Assert UpdateEventDescription
+                Assert.IsNotNull(ger.VEvent);
+                Assert.AreEqual("New Description", ger.VEvent.Description.Value);
 
-                    // Act UpdateEventDuration
-                    UpdateEventDurationCommand ueduc = GlobalUsings.executeCommand(cd, UpdateEventDurationCommand.Create(createdEventId.ToString(), DateTime.Now.AddDays(1), DateTime.Now.AddDays(1).AddHours(2)));
-                    ger = GlobalUsings.executeCommand(acd, GetEventByIdCommand.Create(createdEventId.ToString()));
+                // Act UpdateEventDuration
+                UpdateEventDurationCommand ueduc = GlobalUsings.executeCommand(ctx,cd, UpdateEventDurationCommand.Create(createdEventId.ToString(), DateTime.Now.AddDays(1), DateTime.Now.AddDays(1).AddHours(2)));
+                ger = GlobalUsings.executeCommand(ctx, cd, GetEventByIdCommand.Create(createdEventId.ToString()));
 
-                    // Assert UpdateEventDuration
-                    Assert.IsNotNull(ger.VEvent);
-                    Assert.IsNotNull(ger.VEvent.Duration.From);
-                    Assert.IsNotNull(ger.VEvent.Duration.To);
+                // Assert UpdateEventDuration
+                Assert.IsNotNull(ger.VEvent);
+                Assert.IsNotNull(ger.VEvent.Duration.From);
+                Assert.IsNotNull(ger.VEvent.Duration.To);
 
-                    // Act UpdateEventLocation
-                    UpdateEventLocationCommand uelc = GlobalUsings.executeCommand(cd, UpdateEventLocationCommand.Create(createdEventId.ToString(), clc.LocationId.ToString()));
-                    ger = GlobalUsings.executeCommand(acd, GetEventByIdCommand.Create(createdEventId.ToString()));
+                // Act UpdateEventLocation
+                UpdateEventLocationCommand uelc = GlobalUsings.executeCommand(ctx, cd, UpdateEventLocationCommand.Create(createdEventId.ToString(), clc.LocationId.ToString()));
+                ger = GlobalUsings.executeCommand(ctx, cd, GetEventByIdCommand.Create(createdEventId.ToString()));
 
-                    // Assert UpdateEventLocation
-                    Assert.IsNotNull(ger.VEvent);
-                    Assert.IsNotNull(ger.VEvent.Location);
-                }
+                // Assert UpdateEventLocation
+                Assert.IsNotNull(ger.VEvent);
+                Assert.IsNotNull(ger.VEvent.Location);
+
+                // Act UpdateEventMaxNumberOfGuests
+                UpdateEventMaxNumberOfGuestsCommand uemngc = GlobalUsings.executeCommand(ctx, cd, UpdateEventMaxNumberOfGuestsCommand.Create(createdEventId.ToString(), "10"));
+                ger = GlobalUsings.executeCommand(ctx, cd, GetEventByIdCommand.Create(createdEventId.ToString()));
+
+                // Assert UpdateEventMaxNumberOfGuests
+                Assert.IsNotNull(ger.VEvent);
+                Assert.AreEqual(10, ger.VEvent.MaxNumberOfGuests.Value);
+
+                // Act UpdateEventTitle
+                UpdateEventTitleCommand uetc = GlobalUsings.executeCommand(ctx, cd, UpdateEventTitleCommand.Create(createdEventId.ToString(), "New Title"));
+                ger = GlobalUsings.executeCommand(ctx, cd, GetEventByIdCommand.Create(createdEventId.ToString()));
+
+                // Assert UpdateEventTitle
+                Assert.IsNotNull(ger.VEvent);
+                Assert.AreEqual("New Title", ger.VEvent.Title.Value);
+
+                // Act UpdateEventVisibility
+                UpdateEventVisibilityCommand uevc = GlobalUsings.executeCommand(ctx, cd, UpdateEventVisibilityCommand.Create(createdEventId.ToString(), "Public"));
+                ger = GlobalUsings.executeCommand(ctx, cd, GetEventByIdCommand.Create(createdEventId.ToString()));
+
+                // Assert UpdateEventVisibility
+                Assert.IsNotNull(ger.VEvent);
+                Assert.AreEqual("Public", ger.VEvent.Visibility.ToString());
+
+                // Act UpdateEventStatus
+                UpdateEventStatusCommand uesc = GlobalUsings.executeCommand(ctx, cd, UpdateEventStatusCommand.Create(createdEventId.ToString(), "Ready"));
+                ger = GlobalUsings.executeCommand(ctx, cd, GetEventByIdCommand.Create(createdEventId.ToString()));
+
+                // Assert UpdateEventStatus
+                Assert.IsNotNull(ger.VEvent);
+                Assert.AreEqual("Ready", ger.VEvent.Status.ToString());
+                
             }
         }
     }

@@ -7,7 +7,7 @@ using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Application.Commands.Event {
-    class UpdateEventVisibilityCommand {
+   public class UpdateEventVisibilityCommand {
         public Visibility Visibility { get; }
         public Guid EventId { get; }
         private UpdateEventVisibilityCommand(Visibility visibility, Guid eventId) {

@@ -16,7 +16,6 @@ namespace IntegrationTests {
         public static EFCDbContext CreateDbContext() {
             var optionsBuilder = new DbContextOptionsBuilder<EFCDbContext>();
             optionsBuilder.LogTo(Console.WriteLine);
-            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             EFCDbContext context = new EFCDbContext(optionsBuilder.Options);
             return context;
         }
@@ -26,7 +25,8 @@ namespace IntegrationTests {
             context.Database.EnsureCreated();
         }
 
-        public static T executeCommand<T>(CommandDispatcher cd, Result<T> command) {
+        public static T executeCommand<T>(EFCDbContext context,CommandDispatcher cd, Result<T> command) {
+            context.ChangeTracker.Clear();
             Assert.IsTrue(command.IsSuccess());
             Task<Result<T>> res = cd.DispatchAsync(command.payLoad);
             res.Wait();
