@@ -16,7 +16,7 @@ namespace ViaEventAssociation.Core.Application.Commands.Event {
             EventId = eventId;
         }
 
-        public static Result<UpdateEventStatusCommand> Create(string status, string eventId) {
+        public static Result<UpdateEventStatusCommand> Create(string eventId, string status) {
             Enum.TryParse<EventStatus>(status, out EventStatus eventStatus);
             return new Result<UpdateEventStatusCommand>(new UpdateEventStatusCommand(eventStatus, Guid.Parse(eventId)));
         }

@@ -24,6 +24,7 @@ namespace ViaEventAssociation.Core.Application.Handlers.Event {
         public async Task<Result<UpdateEventVisibilityCommand>> HandleAsync(UpdateEventVisibilityCommand command) {
             VEvent vEvent = await eventRepository.GetAsync(command.EventId);
             Result<Visibility> result = vEvent.UpdateVisibility(command.Visibility);
+            await unitOfWork.SaveChangesASync();
             return command.AddResponse(result);
         }
     }

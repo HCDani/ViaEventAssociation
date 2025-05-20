@@ -24,6 +24,7 @@ namespace ViaEventAssociation.Core.Application.Handlers.LocationNS {
             if (rLocation.resultCode == 0) {
                 await locationRepository.CreateAsync(rLocation.payLoad);
             }
+            await unitOfWork.SaveChangesASync();
             return command.AddResponse(rLocation);
         }
     }

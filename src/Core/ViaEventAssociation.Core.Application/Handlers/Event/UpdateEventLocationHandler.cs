@@ -26,6 +26,7 @@ namespace ViaEventAssociation.Core.Application.Handlers.Event {
             VEvent vEvent = await eventRepository.GetAsync(command.EventId);
             Location location = await locationRepository.GetAsync(command.LocationId);
             Result<Location> result = vEvent.UpdateLocation(location);
+            await unitOfWork.SaveChangesASync();
             return command.AddResponse(result);
         }
     }

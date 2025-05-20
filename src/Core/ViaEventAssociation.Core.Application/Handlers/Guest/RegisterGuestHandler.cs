@@ -25,7 +25,8 @@ namespace ViaEventAssociation.Core.Application.Handlers.GuestNS {
             if (rGuest.resultCode == 0) {
                 await guestRepository.CreateAsync(rGuest.payLoad);
             }
-                return command.AddResponse(rGuest);
+            await unitOfWork.SaveChangesASync();
+            return command.AddResponse(rGuest);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace ViaEventAssociation.Core.Application.Commands.Event {
             Description = description;
             EventId = eventId;
         }
-        public static Result<UpdateEventDescriptionCommand> Create(string description, string eventId) {
+        public static Result<UpdateEventDescriptionCommand> Create(string eventId, string description) {
             Result<Description> descriptionResult = Description.Create(description);
             if (descriptionResult.resultCode != 0) {
                 return new Result<UpdateEventDescriptionCommand>(descriptionResult.resultCode, descriptionResult.errorMessage);

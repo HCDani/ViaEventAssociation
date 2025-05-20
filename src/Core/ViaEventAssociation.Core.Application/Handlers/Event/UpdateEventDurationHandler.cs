@@ -23,6 +23,7 @@ namespace ViaEventAssociation.Core.Application.Handlers.Event {
         public async Task<Result<UpdateEventDurationCommand>> HandleAsync(UpdateEventDurationCommand command) {
             VEvent vEvent = await eventRepository.GetAsync(command.EventId);
             Result<EventDuration> result = vEvent.UpdateDuration(command.Duration);
+            await unitOfWork.SaveChangesASync();
             return command.AddResponse(result);
         }
     }

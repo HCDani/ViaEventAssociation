@@ -14,7 +14,7 @@ namespace ViaEventAssociation.Core.Application.Commands.Event {
             Visibility = visibility;
             EventId = eventId;
         }
-        public static Result<UpdateEventVisibilityCommand> Create(string visibility, string eventId) {
+        public static Result<UpdateEventVisibilityCommand> Create(string eventId, string visibility) {
             Enum.TryParse<Visibility>(visibility, out Visibility eventVisibility);
             return new Result<UpdateEventVisibilityCommand>(new UpdateEventVisibilityCommand(eventVisibility, Guid.Parse(eventId)));
         }

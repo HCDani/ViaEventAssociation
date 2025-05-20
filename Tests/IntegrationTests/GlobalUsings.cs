@@ -25,8 +25,9 @@ namespace IntegrationTests {
             context.Database.EnsureCreated();
         }
 
-        public static T executeCommand<T>(CommandDispatcher cd, T command) {
-            Task<Result<T>> res = cd.DispatchAsync(command);
+        public static T executeCommand<T>(CommandDispatcher cd, Result<T> command) {
+            Assert.IsTrue(command.IsSuccess());
+            Task<Result<T>> res = cd.DispatchAsync(command.payLoad);
             res.Wait();
             Result<T> ger = res.Result;
             // Assert

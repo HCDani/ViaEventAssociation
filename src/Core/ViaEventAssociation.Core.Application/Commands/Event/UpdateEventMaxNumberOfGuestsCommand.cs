@@ -14,7 +14,7 @@ namespace ViaEventAssociation.Core.Application.Commands.Event {
             MaxNumberOfGuests = maxNumberOfGuests;
             EventId = eventId;
         }
-        public static Result<UpdateEventMaxNumberOfGuestsCommand> Create(string maxNumberOfGuests, string eventId) {
+        public static Result<UpdateEventMaxNumberOfGuestsCommand> Create(string eventId, string maxNumberOfGuests) {
             Int32.TryParse(maxNumberOfGuests, out int iNumberOfGuests);
             Result<MaxNumberOfGuests> maxNumberOfGuestsResult = MaxNumberOfGuests.Create(iNumberOfGuests);
             if (maxNumberOfGuestsResult.resultCode != 0) {

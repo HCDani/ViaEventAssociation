@@ -14,7 +14,7 @@ namespace ViaEventAssociation.Core.Application.Commands.Event {
             this.title = title;
             EventId = eventId;
         }
-        public static Result<UpdateEventTitleCommand> Create(string title, string eventId) {
+        public static Result<UpdateEventTitleCommand> Create(string eventId, string title) {
             Result<Title> titleResult = Title.Create(title);
             return new Result<UpdateEventTitleCommand>(new UpdateEventTitleCommand(titleResult.payLoad, Guid.Parse(eventId)));
         }

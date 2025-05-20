@@ -14,7 +14,7 @@ namespace ViaEventAssociation.Core.Application.Commands.Event {
             Duration = duration;
             EventId = eventId;
         }
-        public static Result<UpdateEventDurationCommand> Create(DateTime from, DateTime to, string eventId) {
+        public static Result<UpdateEventDurationCommand> Create(string eventId, DateTime from, DateTime to) {
             Result<EventDuration> durationResult = EventDuration.Create(from, to);
             if (durationResult.resultCode != 0) {
                 return new Result<UpdateEventDurationCommand>(durationResult.resultCode, durationResult.errorMessage);

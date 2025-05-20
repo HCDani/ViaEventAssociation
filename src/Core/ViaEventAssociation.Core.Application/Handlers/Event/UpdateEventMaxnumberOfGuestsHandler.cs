@@ -23,6 +23,7 @@ namespace ViaEventAssociation.Core.Application.Handlers.Event {
         public async Task<Result<UpdateEventMaxNumberOfGuestsCommand>> HandleAsync(UpdateEventMaxNumberOfGuestsCommand command) {
             VEvent vEvent = await eventRepository.GetAsync(command.EventId);
             Result<MaxNumberOfGuests> result = vEvent.UpdateMaxNumberOfGuests(command.MaxNumberOfGuests);
+            await unitOfWork.SaveChangesASync();
             return command.AddResponse(result);
         }
     }

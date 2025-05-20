@@ -23,6 +23,7 @@ namespace ViaEventAssociation.Core.Application.Handlers.Event {
         public async Task<Result<UpdateEventTitleCommand>> HandleAsync(UpdateEventTitleCommand command) {
             VEvent vEvent = await eventRepository.GetAsync(command.EventId);
             Result<Title> result = vEvent.UpdateTitle(command.title);
+            await unitOfWork.SaveChangesASync();
             return command.AddResponse(result);
         }
     }
