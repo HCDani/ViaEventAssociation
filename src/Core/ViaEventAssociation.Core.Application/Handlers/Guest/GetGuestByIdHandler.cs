@@ -21,7 +21,7 @@ namespace ViaEventAssociation.Core.Application.Handlers.GuestNS {
         public async Task<Result<GetGuestByIdCommand>> HandleAsync(GetGuestByIdCommand command) {
             Guest guest = await guestRepository.GetAsync(command.GuestId);
             await unitOfWork.SaveChangesASync();
-            return command.AddResponse(guest.Id);
+            return command.AddResponse(guest);
         }
     }
 }

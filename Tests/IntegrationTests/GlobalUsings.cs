@@ -6,6 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ViaEventAssociation.Infrastructure.Persistence;
+using ViaEventAssociation.Core.Tools.OperationResult;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ViaEventAssociation.Core.Application.Commands.Event;
+using ViaEventAssociation.Core.Application.AppEntry;
 
 namespace IntegrationTests {
     public class GlobalUsings {
@@ -20,5 +24,15 @@ namespace IntegrationTests {
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
         }
+
+        public static T executeCommand<T>(CommandDispatcher cd, T command) {
+            Task<Result<T>> res = cd.DispatchAsync(command);
+            res.Wait();
+            Result<T> ger = res.Result;
+            // Assert
+            Assert.IsTrue(ger.IsSuccess());
+            return ger.payLoad;
+        }
+
     }
 }

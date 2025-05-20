@@ -28,25 +28,27 @@ namespace IntegrationTests.RepositoryTests {
             // Arrange
             Guid createdEventId = Guid.Empty;
             using (var context = GlobalUsings.CreateDbContext()) {
-                CommandDispatcher cd = new (context);
-                // Act
-                UpdateEventMaxnumberOfGuestsCommand cec = UpdateEventMaxnumberOfGuestsCommand.Create().payLoad;
-                Task<Result<UpdateEventMaxnumberOfGuestsCommand>> res = cd.DispatchAsync(cec);
+                using (var assertcontext = GlobalUsings.CreateDbContext()) {
+                    CommandDispatcher cd = new (context);
+                    // Act
+                    CreateEventCommand cec = CreateEventCommand.Create().payLoad;
+                GlobalUsings.executeCommand(cd, cec);
+                    Task<Result<CreateEventCommand>> res = cd.DispatchAsync(cec);
                 res.Wait();
-                Result<UpdateEventMaxnumberOfGuestsCommand> cecr = res.Result;
+                Result<CreateEventCommand> cecr = res.Result;
                 Assert.IsTrue(cecr.IsSuccess());
                 createdEventId = cecr.payLoad.EventId;
-            }
-            using (var assertcontext = GlobalUsings.CreateDbContext()) {
-                CommandDispatcher cd = new (assertcontext);
+
+                CommandDispatcher acd = new (assertcontext);
                 GetEventByIdCommand getEventByIdCommand = GetEventByIdCommand.Create(createdEventId.ToString()).payLoad;
-                Task<Result<GetEventByIdCommand>> res = cd.DispatchAsync(getEventByIdCommand);
+                Task<Result<GetEventByIdCommand>> res1 = acd.DispatchAsync(getEventByIdCommand);
                 res.Wait();
-                Result<GetEventByIdCommand> ger = res.Result;
+                Result<GetEventByIdCommand> ger = res1.Result;
                 // Assert
                 Assert.IsTrue(ger.IsSuccess());
                 Assert.IsNotNull(ger.payLoad.VEvent);
                 Assert.AreEqual(ger.payLoad.VEvent.Id, createdEventId);
+                }
             }
         }
     }

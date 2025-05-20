@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViaEventAssociation.Core.Domain.Aggregates.LocationNS;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Application.Commands.LocationNS {
@@ -20,7 +21,10 @@ namespace ViaEventAssociation.Core.Application.Commands.LocationNS {
             }
             return new Result<GetLocationByIdCommand>(new GetLocationByIdCommand(parsedLocationId));
         }
-        public Result<GetLocationByIdCommand> AddResponse(Guid locationId) {
+
+        public Location? Location { get; private set; }
+        public Result<GetLocationByIdCommand> AddResponse(Location location) {
+            Location = location;
             return new Result<GetLocationByIdCommand>(this);
         }
     }

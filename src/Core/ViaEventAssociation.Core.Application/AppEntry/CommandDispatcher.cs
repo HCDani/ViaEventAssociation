@@ -34,7 +34,7 @@ namespace ViaEventAssociation.Core.Application.AppEntry {
            Type serviceType = typeof(ICommandHandler<TCommand>);
             ICommandHandler<TCommand> handler = null;
             switch (serviceType) {
-                case Type t when t == typeof(ICommandHandler<UpdateEventMaxnumberOfGuestsCommand>):
+                case Type t when t == typeof(ICommandHandler<CreateEventCommand>):
                     handler = (ICommandHandler<TCommand>) new CreateEventHandler(eventRepository, unitOfWork);
                     break;
                 case Type t when t == typeof(ICommandHandler<UpdateEventDescriptionCommand>):
@@ -43,7 +43,7 @@ namespace ViaEventAssociation.Core.Application.AppEntry {
                 case Type t when t == typeof(ICommandHandler<UpdateEventDurationCommand>):
                     handler = (ICommandHandler<TCommand>)new UpdateEventDurationHandler(eventRepository, unitOfWork);
                     break;
-                case Type t when t == typeof(ICommandHandler<UpdateEventMaxnumberOfGuestsCommand>):
+                case Type t when t == typeof(ICommandHandler<UpdateEventMaxNumberOfGuestsCommand>):
                     handler = (ICommandHandler<TCommand>)new UpdateEventMaxnumberOfGuestsHandler(eventRepository, unitOfWork);
                     break;
                 case Type t when t == typeof(ICommandHandler<UpdateEventStatusCommand>):

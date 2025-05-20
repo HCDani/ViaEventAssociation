@@ -21,7 +21,7 @@ namespace ViaEventAssociation.Core.Application.Handlers.LocationNS {
         public async Task<Result<GetLocationByIdCommand>> HandleAsync(GetLocationByIdCommand command) {
             Location location = await locationRepository.GetAsync(command.LocationId);
             await unitOfWork.SaveChangesASync();
-            return command.AddResponse(location.Id);
+            return command.AddResponse(location);
         }
     }
 }

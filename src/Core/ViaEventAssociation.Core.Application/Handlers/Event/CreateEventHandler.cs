@@ -11,7 +11,7 @@ using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Application.Handlers.Event {
-    public class CreateEventHandler : ICommandHandler<UpdateEventMaxnumberOfGuestsCommand> {
+    public class CreateEventHandler : ICommandHandler<CreateEventCommand> {
         private readonly IEventRepository eventRepository;
         private readonly IUnitOfWork unitOfWork;
 
@@ -19,7 +19,7 @@ namespace ViaEventAssociation.Core.Application.Handlers.Event {
             this.eventRepository = eventRepository;
             this.unitOfWork = unitOfWork;
         }
-        public async Task<Result<UpdateEventMaxnumberOfGuestsCommand>> HandleAsync(UpdateEventMaxnumberOfGuestsCommand command) {
+        public async Task<Result<CreateEventCommand>> HandleAsync(CreateEventCommand command) {
             VEvent vEvent = VEvent.Create(Guid.NewGuid());
             await eventRepository.CreateAsync(vEvent);
             await unitOfWork.SaveChangesASync();

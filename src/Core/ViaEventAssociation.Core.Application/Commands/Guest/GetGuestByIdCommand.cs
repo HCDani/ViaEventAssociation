@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ViaEventAssociation.Core.Application.Commands.Event;
+using ViaEventAssociation.Core.Domain.Aggregates.GuestNS;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Application.Commands.GuestNS {
@@ -21,7 +22,10 @@ namespace ViaEventAssociation.Core.Application.Commands.GuestNS {
             }
             return new Result<GetGuestByIdCommand>(new GetGuestByIdCommand(parsedGuestId));
         }
-        public Result<GetGuestByIdCommand> AddResponse(Guid guestId) {
+        
+        public Guest? Guest { get; private set; }
+        public Result<GetGuestByIdCommand> AddResponse(Guest guest) {
+            Guest = guest;
             return new Result<GetGuestByIdCommand>(this);
         }
     }
