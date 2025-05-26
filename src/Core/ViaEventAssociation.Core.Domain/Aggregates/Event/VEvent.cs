@@ -1,6 +1,7 @@
 ﻿using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
 using ViaEventAssociation.Core.Domain.Aggregates.LocationNS;
 using ViaEventAssociation.Core.Domain.Common.Bases;
+using ViaEventAssociation.Core.Domain.Services;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.EventNS {
@@ -43,7 +44,7 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.EventNS {
         public Result<EventDuration> UpdateDuration(EventDuration duration) {
             if (Status == EventStatus.Active) return new Result<EventDuration>(36, "Duration cannot be updated when status is active.");
             if (Status == EventStatus.Cancelled) return new Result<EventDuration>(37, "Duration cannot be updated when status is cancelled.");
-            if (duration.From < DateTime.Now) return new Result<EventDuration>(38, "The 'From' date must be in the future");
+            if (duration.From < SystemTimeHolder.SystemTime.GetCurrentDateTime()) return new Result<EventDuration>(38, "The 'From' date must be in the future");
             Duration = duration;
             Status = EventStatus.Draft;
             return new Result<EventDuration>(Duration);
@@ -70,7 +71,7 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.EventNS {
                 if (Description == null) {
                     return new Result<EventStatus>(6, "Description must be set before setting status to ready");
                 }
-                if (Duration.From < DateTime.Now) return new Result<EventStatus>(38, "The 'From' date must be in the future");      
+                if (Duration.From < SystemTimeHolder.SystemTime.GetCurrentDateTime()) return new Result<EventStatus>(38, "The 'From' date must be in the future");      
             }
             // New active status is valid if the existing status is ready or active.
             if (status == EventStatus.Active && Status != EventStatus.Ready && Status != EventStatus.Active) {
