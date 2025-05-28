@@ -13,10 +13,15 @@ using ViaEventAssociation.Core.Application.AppEntry;
 
 namespace IntegrationTests {
     public class GlobalUsings {
-        public static EFCDbContext CreateDbContext() {
+        public static EFCDbContext CreateDbContext(string? dbname) {
             var optionsBuilder = new DbContextOptionsBuilder<EFCDbContext>();
             optionsBuilder.LogTo(Console.WriteLine);
-            EFCDbContext context = new EFCDbContext(optionsBuilder.Options);
+            if (dbname == null) {
+                optionsBuilder.UseSqlite("Data Source=../../viaeventassociation.db");
+            } else {
+                optionsBuilder.UseSqlite("Data Source="+dbname);
+            }
+            EFCDbContext context = new (optionsBuilder.Options);
             return context;
         }
 

@@ -10,6 +10,7 @@ using ViaEventAssociation.Core.Domain.Aggregates.GuestNS;
 using ViaEventAssociation.Core.Tools.OperationResult;
 using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation.Values;
 using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation.Contracts;
+using ViaEventAssociation.Core.Domain.Services;
 
 namespace ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation {
     public class EventParticipation : Entity<Guid> {
@@ -24,7 +25,7 @@ namespace ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation {
             if (guest == null) return new Result<EventParticipation>(151, "Guest cannot be null.");
             if (vEvent == null) return new Result<EventParticipation>(152, "Event cannot be null.");
             if (vEvent.Status == EventStatus.Cancelled) return new Result<EventParticipation>(157, "Guest cannot participate in a cancelled event.");
-            if (vEvent.Visibility == Visibility.Private) return new Result<EventParticipation>(158, "Guest cannot participate in a private event.");
+            if (vEvent.Visibility == Visibility.Private && participationStatus != ParticipationStatus.Invited) return new Result<EventParticipation>(158, "Guest cannot participate in a private event.");
             List<EventParticipation> participations = eventParticipants.GetParticipants(vEvent.Id);
             if (participations.FindAll(participant => participant.Guest.Id == guest.Id).Count()>0){
                 return new Result<EventParticipation>(153, "Guest is already participating in the event.");
@@ -34,7 +35,7 @@ namespace ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation {
             if (participations.FindAll(participant => participant.ParticipationStatus == ParticipationStatus.Participating).Count() == vEvent.MaxNumberOfGuests.Value) {
                 return new Result<EventParticipation>(155, "The event is full.");
             }
-            if (vEvent.Status == EventStatus.Active && vEvent.Duration.From < DateTime.Now) return new Result<EventParticipation>(156, "Guest cannot participate in an already active event.");
+            if (vEvent.Status == EventStatus.Active && vEvent.Duration.From < SystemTimeHolder.SystemTime.GetCurrentDateTime()) return new Result<EventParticipation>(156, "Guest cannot participate in an already active event.");
             
             return new Result<EventParticipation>(new EventParticipation(id) { ParticipationStatus = participationStatus, Guest = guest, Event = vEvent });
         }
@@ -42,10 +43,12 @@ namespace ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation {
             if (Event.Status == EventStatus.Cancelled) return new Result<EventParticipation>(157, "Guest cannot participate in a cancelled event.");
             if (Event.Status == EventStatus.Ready) return new Result<EventParticipation>(161, "The event is not ready to be joined to.");
             if (status == ParticipationStatus.Invited) return new Result<EventParticipation>(160, "Cannot set Participation status to invited.");
-            if (Event.Status == EventStatus.Active && Event.Duration.From < DateTime.Now) return new Result<EventParticipation>(156, "Guest cannot participate in an already active event.");
+            if (Event.Status == EventStatus.Active && Event.Duration.From < SystemTimeHolder.SystemTime.GetCurrentDateTime()) return new Result<EventParticipation>(156, "Guest cannot change participation in an already active event.");
             List<EventParticipation> participations = eventParticipants.GetParticipants(Event.Id);
             EventParticipation? participant = participations.Find(participant => participant.Guest.Id == Guest.Id);
             if (participant == null) return new Result<EventParticipation>(151, "Guest cannot be null.");
+            if(status == ParticipationStatus.Declined && ParticipationStatus != ParticipationStatus.Invited) return new Result<EventParticipation>(162, "Guest can only decline an invitation.");
+            if (status == ParticipationStatus.Cancelled && ParticipationStatus != ParticipationStatus.Participating) return new Result<EventParticipation>(163, "Guest can only cancel a participation.");
             int participationCount = participations.FindAll(participant => participant.ParticipationStatus == ParticipationStatus.Participating).Count();
             int? maxNumberOfGuests = Event.MaxNumberOfGuests.Value;
             if (participationCount == maxNumberOfGuests) {

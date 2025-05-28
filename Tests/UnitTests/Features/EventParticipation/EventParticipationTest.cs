@@ -14,6 +14,9 @@ using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation.Values;
 using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation.Contracts;
 using System.Runtime;
 using Moq;
+using UnitTests.Features.Tools.Fakes;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using ViaEventAssociation.Core.Domain.Services;
 
 namespace UnitTests.Features.EventParticipationTest {
     public class EventParticipationTest {
@@ -58,12 +61,10 @@ namespace UnitTests.Features.EventParticipationTest {
             Assert.Equal(0, eventStatusResultS1.resultCode);
             Result<EventStatus> eventStatusResultS2 = vEvent.UpdateStatus(EventStatus.Active);
             Assert.Equal(0, eventStatusResultS2.resultCode);
-            List<EventParticipation> eventGuestParticipations = new List<EventParticipation>();
-            Mock<IGetEventParticipants> mockEventParticipants = new Mock<IGetEventParticipants>();
-            mockEventParticipants.Setup(x => x.GetParticipants(vEvent.Id)).Returns(eventGuestParticipations);
+            InMemEventParticipationStub mockEventParticipants = new InMemEventParticipationStub();
 
             // Act S1
-            Result<EventParticipation> eventParticipationResult = EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants.Object);
+            Result<EventParticipation> eventParticipationResult = EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants);
 
             // Assert S1
             Assert.Equal(0, eventParticipationResult.resultCode);
@@ -71,10 +72,9 @@ namespace UnitTests.Features.EventParticipationTest {
             // Arrange F1
             vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateVisibility(Visibility.Public);
-            mockEventParticipants.Setup(x => x.GetParticipants(vEvent.Id)).Returns(eventGuestParticipations);
 
             // Act F1
-            Result<EventParticipation> eventParticipationResultF1 = EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants.Object);
+            Result<EventParticipation> eventParticipationResultF1 = EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants);
 
             // Assert F1
             Assert.Equal(154, eventParticipationResultF1.resultCode);
@@ -91,23 +91,22 @@ namespace UnitTests.Features.EventParticipationTest {
             Result<EventStatus> eventStatusResultF2B = vEvent.UpdateStatus(EventStatus.Active);
             Assert.Equal(0, eventStatusResultF2B.resultCode);
 
-            mockEventParticipants.Setup(x => x.GetParticipants(vEvent.Id)).Returns(eventGuestParticipations);
-            Result<EventParticipation> eventParticipationResultF5A = EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants.Object);
-            eventGuestParticipations.Add(eventParticipationResultF5A.payLoad);
+            Result<EventParticipation> eventParticipationResultF5A = EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants);
+            mockEventParticipants.CreateAsync(eventParticipationResultF5A.payLoad);
 
             // Act F5
-            Result<EventParticipation> eventParticipationResultF5 = EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants.Object);
+            Result<EventParticipation> eventParticipationResultF5 = EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants);
             // Assert F5
             Assert.Equal(153, eventParticipationResultF5.resultCode);
             // Arrange F2
-            Result<EventParticipation> eventParticipationResultF2B = EventParticipation.Create(Guid.NewGuid(), guestResult2.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants.Object);
-            eventGuestParticipations.Add(eventParticipationResultF2B.payLoad);
-            Result<EventParticipation> eventParticipationResultF2C = EventParticipation.Create(Guid.NewGuid(), guestResult3.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants.Object);
-            eventGuestParticipations.Add(eventParticipationResultF2C.payLoad);
-            Result<EventParticipation> eventParticipationResultF2D = EventParticipation.Create(Guid.NewGuid(), guestResult4.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants.Object);
-            eventGuestParticipations.Add(eventParticipationResultF2D.payLoad);
-            Result<EventParticipation> eventParticipationResultF2E = EventParticipation.Create(Guid.NewGuid(), guestResult5.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants.Object);
-            eventGuestParticipations.Add(eventParticipationResultF2E.payLoad);
+            Result<EventParticipation> eventParticipationResultF2B = EventParticipation.Create(Guid.NewGuid(), guestResult2.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants);
+            mockEventParticipants.CreateAsync(eventParticipationResultF2B.payLoad);
+            Result<EventParticipation> eventParticipationResultF2C = EventParticipation.Create(Guid.NewGuid(), guestResult3.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants);
+            mockEventParticipants.CreateAsync(eventParticipationResultF2C.payLoad);
+            Result<EventParticipation> eventParticipationResultF2D = EventParticipation.Create(Guid.NewGuid(), guestResult4.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants);
+            mockEventParticipants.CreateAsync(eventParticipationResultF2D.payLoad);
+            Result<EventParticipation> eventParticipationResultF2E = EventParticipation.Create(Guid.NewGuid(), guestResult5.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants);
+            mockEventParticipants.CreateAsync(eventParticipationResultF2E.payLoad);
 
             Guid id6 = Guid.NewGuid();
             GuestName guestName6 = GuestName.Create("John", "Doe").payLoad;
@@ -115,7 +114,7 @@ namespace UnitTests.Features.EventParticipationTest {
             ProfilePictureUrl profilePictureUrl6 = ProfilePictureUrl.Create("https://example.com/profile.jpg").payLoad;
             Result<Guest> guestResult6 = Guest.RegisterGuest(id6, guestName6, email6, profilePictureUrl6);
             // Act F2
-            Result<EventParticipation> eventParticipationResultF2F = EventParticipation.Create(Guid.NewGuid(), guestResult6.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants.Object);
+            Result<EventParticipation> eventParticipationResultF2F = EventParticipation.Create(Guid.NewGuid(), guestResult6.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants);
 
             // Assert F2
             Assert.Equal(155, eventParticipationResultF2F.resultCode);
@@ -137,8 +136,7 @@ namespace UnitTests.Features.EventParticipationTest {
                 Thread.Sleep(1500);
 
                 // Act F3
-                mockEventParticipants.Setup(x => x.GetParticipants(vEvent.Id)).Returns(new List<EventParticipation>());
-                Result<EventParticipation> eventParticipationResultF3 = EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants.Object);
+                Result<EventParticipation> eventParticipationResultF3 = EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants);
 
                 // Assert F3
                 Assert.Equal(156, eventParticipationResultF3.resultCode);
@@ -160,8 +158,7 @@ namespace UnitTests.Features.EventParticipationTest {
             Assert.Equal(0, eventStatusResultF4B.resultCode);
 
             // Act F4
-            mockEventParticipants.Setup(x => x.GetParticipants(vEvent.Id)).Returns(new List<EventParticipation>());
-            Result<EventParticipation> eventParticipationResultF4 = EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants.Object);
+            Result<EventParticipation> eventParticipationResultF4 = EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants);
 
             // Assert F4
             Assert.Equal(158, eventParticipationResultF4.resultCode);
@@ -172,6 +169,54 @@ namespace UnitTests.Features.EventParticipationTest {
         [Fact]
         public void GuestCancelsParticipation() {
             // Arrange S1
+            FakeSystemTime fakeSystemTime = new FakeSystemTime();
+            fakeSystemTime.DateTime = new DateTime(2026, 05, 27, 9, 0, 0);
+            SystemTimeHolder.SetSystemTime(fakeSystemTime);
+            VEvent vEvent = VEvent.Create(Guid.NewGuid());
+            vEvent.UpdateTitle(Title.Create("Event Title").payLoad);
+            vEvent.UpdateVisibility(Visibility.Private);
+            vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
+            vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
+            vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(10).payLoad);
+            Result<EventDuration> newDurationS1 = EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11));
+            vEvent.UpdateDuration(newDurationS1.payLoad);
+            Assert.Equal(0, vEvent.UpdateDuration(newDurationS1.payLoad).resultCode);
+            Result<EventStatus> eventStatusResultS1A = vEvent.UpdateStatus(EventStatus.Ready);
+            Assert.Equal(0, eventStatusResultS1A.resultCode);
+            Result<EventStatus> eventStatusResultS1B = vEvent.UpdateStatus(EventStatus.Active);
+            Assert.Equal(0, eventStatusResultS1B.resultCode);
+
+            Guid id = Guid.NewGuid();
+            GuestName guestName = GuestName.Create("John", "Doe").payLoad;
+            Email email = Email.Create("john@via.dk").payLoad;
+            ProfilePictureUrl profilePictureUrl = ProfilePictureUrl.Create("https://example.com/profile.jpg").payLoad;
+            Result<Guest> guestResult = Guest.RegisterGuest(id, guestName, email, profilePictureUrl);
+            InMemEventParticipationStub mockEventParticipants = new InMemEventParticipationStub();
+            Result<EventParticipation> eventParticipationResultS1A = EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Invited, mockEventParticipants);
+            Assert.True(eventParticipationResultS1A.IsSuccess());
+            mockEventParticipants.CreateAsync(eventParticipationResultS1A.payLoad);
+
+            // Act S1
+            eventParticipationResultS1A.payLoad.UpdateStatus(ParticipationStatus.Cancelled, mockEventParticipants);
+
+            // Assert S1
+            Assert.Equal(0, eventParticipationResultS1A.resultCode);
+
+            // Arrange S2 There is no such cases where the system would care about a guest that is not part of the system at all.
+
+            // Arrange F1
+            mockEventParticipants.Clear();
+            Result<EventParticipation> eventParticipationResultF1A = EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Invited, mockEventParticipants);
+            Assert.True(eventParticipationResultF1A.IsSuccess());
+            mockEventParticipants.CreateAsync(eventParticipationResultF1A.payLoad);
+            eventParticipationResultF1A.payLoad.UpdateStatus(ParticipationStatus.Participating, mockEventParticipants);
+
+            // Act F1
+            fakeSystemTime.DateTime = new DateTime(2026, 10, 31, 10, 0, 0);
+            Result<EventParticipation> eventParticipationResultF1B = eventParticipationResultF1A.payLoad.UpdateStatus(ParticipationStatus.Cancelled, mockEventParticipants);
+
+            // Assert F1
+            Assert.Equal(156, eventParticipationResultF1B.resultCode);
 
         }
 
@@ -268,6 +313,9 @@ namespace UnitTests.Features.EventParticipationTest {
         [Fact]
         public void GuestAcceptsInvitation() {
             // Arrange S1
+            FakeSystemTime fakeSystemTime = new FakeSystemTime();
+            fakeSystemTime.DateTime = new DateTime(2026, 05, 27, 9, 0, 0);
+            SystemTimeHolder.SetSystemTime(fakeSystemTime);
             VEvent vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateTitle(Title.Create("Event Title").payLoad);
             vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
@@ -373,31 +421,29 @@ namespace UnitTests.Features.EventParticipationTest {
             Assert.Equal(157, eventParticipationResultF3F.resultCode);
 
             // Arrange F5
-            if (DateTime.Now.Hour > 8 && DateTime.Now.Hour < 23) {
-                VEvent vEventF5 = VEvent.Create(Guid.NewGuid());
-                vEventF5.UpdateTitle(Title.Create("Event Title").payLoad);
-                vEventF5.UpdateDuration(EventDuration.Create(DateTime.Now.AddSeconds(1), DateTime.Now.AddHours(1).AddSeconds(3)).payLoad);
-                vEventF5.UpdateVisibility(Visibility.Public);
-                vEventF5.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
-                vEventF5.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
-                Result<EventStatus> eventStatusResultF5 = vEventF5.UpdateStatus(EventStatus.Ready);
-                Assert.Equal(0, eventStatusResultF5.resultCode);
-                Result<EventStatus> eventStatusResultF5A = vEventF5.UpdateStatus(EventStatus.Active);
-                Assert.Equal(0, eventStatusResultF5A.resultCode);
-                eventGuestParticipations.Clear();
-                mockEventParticipants.Setup(x => x.GetParticipants(vEventF5.Id)).Returns(eventGuestParticipations);
-                Result<EventParticipation> eventParticipationResultF5 = EventParticipation.Create(Guid.NewGuid(), guest2, vEventF5, ParticipationStatus.Invited, mockEventParticipants.Object);
-                Assert.Equal(0, eventParticipationResultF5.resultCode);
-                eventGuestParticipations.Add(eventParticipationResultF5.payLoad);
 
-                Thread.Sleep(1500);
+            VEvent vEventF5 = VEvent.Create(Guid.NewGuid());
+            vEventF5.UpdateTitle(Title.Create("Event Title").payLoad);
+            vEventF5.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
+            vEventF5.UpdateVisibility(Visibility.Public);
+            vEventF5.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
+            vEventF5.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
+            Result<EventStatus> eventStatusResultF5 = vEventF5.UpdateStatus(EventStatus.Ready);
+            Assert.Equal(0, eventStatusResultF5.resultCode);
+            Result<EventStatus> eventStatusResultF5A = vEventF5.UpdateStatus(EventStatus.Active);
+            Assert.Equal(0, eventStatusResultF5A.resultCode);
+            eventGuestParticipations.Clear();
+            mockEventParticipants.Setup(x => x.GetParticipants(vEventF5.Id)).Returns(eventGuestParticipations);
+            Result<EventParticipation> eventParticipationResultF5 = EventParticipation.Create(Guid.NewGuid(), guest2, vEventF5, ParticipationStatus.Invited, mockEventParticipants.Object);
+            Assert.Equal(0, eventParticipationResultF5.resultCode);
+            eventGuestParticipations.Add(eventParticipationResultF5.payLoad);
+            fakeSystemTime.DateTime = new DateTime(2026, 10, 31, 10, 0, 0);
 
-                // Act F5
-                Result<EventParticipation> eventParticipationResultF5F = eventParticipationResultF5.payLoad.UpdateStatus(ParticipationStatus.Participating, mockEventParticipants.Object);
+            // Act F5
+            Result<EventParticipation> eventParticipationResultF5F = eventParticipationResultF5.payLoad.UpdateStatus(ParticipationStatus.Participating, mockEventParticipants.Object);
 
-                // Assert F5
-                Assert.Equal(156, eventParticipationResultF5F.resultCode);
-            }
+            // Assert F5
+            Assert.Equal(156, eventParticipationResultF5F.resultCode);
         }
         // ID 15 use case. Requires ORM, otherwise violates ZOMBIES.
         [Fact]

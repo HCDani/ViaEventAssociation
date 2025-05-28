@@ -10,15 +10,10 @@ namespace ViaEventAssociation.Infrastructure.Persistence {
     public class EFCDbContext(DbContextOptions options) : DbContext(options) {
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            var folder = Environment.SpecialFolder.LocalApplicationData;
-            var path = Environment.GetFolderPath(folder);
-            var DbPath = System.IO.Path.Join(path, "viaeventassociation.db");
-            optionsBuilder.UseSqlite($"Data Source = {DbPath}");
-           
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(EFCDbContext).Assembly);
+            //modelBuilder.ApplyConfigurationsFromAssembly(typeof(EFCDbContext).Assembly);
 
             // Configure VEvent value objects as an owned type
             modelBuilder.Entity<VEvent>(builder => {
@@ -84,6 +79,10 @@ namespace ViaEventAssociation.Infrastructure.Persistence {
             // Configure Location value objects as an owned type
             modelBuilder.Entity<EventParticipation>(builder => {
                 builder.HasKey(g => g.Id);
+                builder.Property<Guid>("EventId").IsRequired();
+                builder.HasOne<VEvent>(v => v.Event).WithMany().HasForeignKey("EventId");
+                builder.Property<Guid>("GuestId").IsRequired();
+                builder.HasOne<Guest>(v => v.Guest).WithMany().HasForeignKey("GuestId");
             });
         }
         public DbSet<VEvent> Events => Set<VEvent>();
@@ -93,7 +92,7 @@ namespace ViaEventAssociation.Infrastructure.Persistence {
     public class EFCDesignTimeDbContextFactory : IDesignTimeDbContextFactory<EFCDbContext> {
         public EFCDbContext CreateDbContext(String[] args) {
             var optionsBuilder = new DbContextOptionsBuilder<EFCDbContext>();
-            optionsBuilder.UseSqlite("Data Source=viaeventassociation.db");
+            optionsBuilder.UseSqlite("Data Source=../../viaeventassociation.db");
             return new EFCDbContext(optionsBuilder.Options);
         }
     }

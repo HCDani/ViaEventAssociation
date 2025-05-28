@@ -11,9 +11,11 @@ namespace IntegrationTests.RepositoryTests {
 
     [TestClass]
     public class LocationRepositoryTest {
+        private const string Dbname = "../../LocationRepositoryTest.db";
+
         [ClassInitialize]
         public static void Initialize(TestContext _1) {
-            using (var dbContext = GlobalUsings.CreateDbContext()) {
+            using (var dbContext = GlobalUsings.CreateDbContext(Dbname)) {
                 GlobalUsings.InitializeDatabase(dbContext);
             }
         }
@@ -21,7 +23,7 @@ namespace IntegrationTests.RepositoryTests {
         [TestMethod]
         public void TestLocationRepository() {
             // Arrange
-            using (var ctx = GlobalUsings.CreateDbContext()) {
+            using (var ctx = GlobalUsings.CreateDbContext(Dbname)) {
 
                 CommandDispatcher cd = new(ctx);
                 // Act Create

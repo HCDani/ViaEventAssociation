@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation.Values {
     public enum ParticipationStatus {
         Participating,
-        Invited
+        Invited,
+        Declined,
+        Cancelled
     }
 }

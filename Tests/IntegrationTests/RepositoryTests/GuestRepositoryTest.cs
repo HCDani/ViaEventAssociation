@@ -12,16 +12,17 @@ namespace IntegrationTests.RepositoryTests {
 
     [TestClass]
     public class GuestRepositoryTest {
+        private const string Dbname = "../../GuestRepositoryTest.db";
         [ClassInitialize]
         public static void Initialize(TestContext _1) {
-            using (var dbContext = GlobalUsings.CreateDbContext()) {
+            using (var dbContext = GlobalUsings.CreateDbContext(Dbname)) {
                 GlobalUsings.InitializeDatabase(dbContext);
             }
         }
 
         [TestMethod]
         public void TestGuestRepository() {
-            using (var ctx = GlobalUsings.CreateDbContext()) {
+            using (var ctx = GlobalUsings.CreateDbContext(Dbname)) {
                 CommandDispatcher cd = new(ctx);
                 // Act Create
                 RegisterGuestCommand rgc = GlobalUsings.executeCommand(ctx,cd, RegisterGuestCommand.Create("email@via.dk", "FirstName", "LastName", "https://example.com/profile.jpg"));
