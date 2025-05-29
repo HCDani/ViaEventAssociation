@@ -7,12 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using ViaEventAssociation.Core.Application.AppEntry;
 using ViaEventAssociation.Core.Application.Commands.Event;
+using ViaEventAssociation.Core.Application.Commands.EventGuestParticipation;
 using ViaEventAssociation.Core.Application.Commands.GuestNS;
 using ViaEventAssociation.Core.Application.Commands.LocationNS;
 
 namespace IntegrationTests.RepositoryTests {
+    [TestClass]
     public class ScaffoldingDBInit {
-        private const string Dbname = "../../ScaffoldingDBInit.db";
+        private const string Dbname = "../../../ScaffoldingDBInit.db";
         [TestMethod]
         public void TestDBInit() {
             // Arrange
@@ -86,6 +88,15 @@ namespace IntegrationTests.RepositoryTests {
                 Assert.IsNotNull(ger.VEvent);
                 Assert.AreEqual("Ready", ger.VEvent.Status.ToString());
 
+                // Act UpdateEventStatus
+                UpdateEventStatusCommand uesca = GlobalUsings.executeCommand(ctx, cd, UpdateEventStatusCommand.Create(createdEventId.ToString(), "Active"));
+                ger = GlobalUsings.executeCommand(ctx, cd, GetEventByIdCommand.Create(createdEventId.ToString()));
+
+                // Assert UpdateEventStatus
+                Assert.IsNotNull(ger.VEvent);
+                Assert.AreEqual("Active", ger.VEvent.Status.ToString());
+
+                // Assert RegisterGuest
                 RegisterGuestCommand rgc = GlobalUsings.executeCommand(ctx, cd, RegisterGuestCommand.Create("email@via.dk", "FirstName", "LastName", "https://example.com/profile.jpg"));
                 Guid createdGuestId = rgc.GuestId;
 
@@ -94,6 +105,10 @@ namespace IntegrationTests.RepositoryTests {
                 Assert.IsNotNull(ggbic.Guest);
                 Assert.AreEqual(createdGuestId, ggbic.Guest.Id);
 
+                // Act Create Event Participation
+                CreateEventParticipationCommand cepc = GlobalUsings.executeCommand(ctx, cd, CreateEventParticipationCommand.Create(createdEventId.ToString(), createdGuestId.ToString(), "Participating"));
+                //Assert Create Event Participation
+                Assert.AreNotEqual(cepc.ParticipationId, Guid.Empty);
             }
         }
     }

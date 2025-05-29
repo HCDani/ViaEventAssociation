@@ -8,6 +8,8 @@ using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
 using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
 using ViaEventAssociation.Core.Domain.Aggregates.LocationNS;
 using ViaEventAssociation.Core.Tools.OperationResult;
+using UnitTests.Features.Tools.Fakes;
+using ViaEventAssociation.Core.Domain.Services;
 
 namespace UnitTests.Features.Event
 {
@@ -17,6 +19,9 @@ namespace UnitTests.Features.Event
         [Fact]
         public void UpdateStatusTest_Ready() {
             // Arrange S1
+            FakeSystemTime fakeSystemTime = new FakeSystemTime();
+            fakeSystemTime.DateTime = new DateTime(2026, 05, 27, 9, 0, 0);
+            SystemTimeHolder.SetSystemTime(fakeSystemTime);
             Title title = Title.Create("Event Title").payLoad;
             VEvent vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateTitle(title);
@@ -45,20 +50,19 @@ namespace UnitTests.Features.Event
             // Assert F2
             Assert.Equal(2, resultStatusF2B.resultCode);
 
-            // Arrange F3 This only works if the current time is after 8 am and before midnight by 2 seconds.
-            if(DateTime.Now.Hour > 8 && DateTime.Now.Hour < 23) {
-                vEvent = VEvent.Create(Guid.NewGuid());
-                vEvent.UpdateTitle(title);
-                Result<EventDuration> newDurationF10 = EventDuration.Create(DateTime.Now.AddSeconds(1), DateTime.Now.AddHours(1).AddSeconds(3));
-                // Act F3
-                vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
+            // Arrange F3
+            vEvent = VEvent.Create(Guid.NewGuid());
+            vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
+            vEvent.UpdateTitle(title);
+            Result<EventDuration> newDurationF10 = EventDuration.Create(new DateTime (2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 10, 0, 0));
+            Assert.Equal(0, vEvent.UpdateDuration(newDurationF10.payLoad).resultCode);
+            fakeSystemTime.DateTime = new DateTime(2026, 10, 31, 9, 0, 1);
+            // Act F3
+            Result<EventStatus> resultStatusF3 = vEvent.UpdateStatus(EventStatus.Ready);
 
-                // Assert F3
-                Assert.Equal(0, vEvent.UpdateDuration(newDurationF10.payLoad).resultCode);
-                Thread.Sleep(1500);
-                Result<EventStatus> resultStatusF3 = vEvent.UpdateStatus(EventStatus.Ready);
-                Assert.Equal(38, resultStatusF3.resultCode);
-            }
+            // Assert F3
+            Assert.Equal(38, resultStatusF3.resultCode);
+
 
             // Arrange F4
             vEvent = VEvent.Create(Guid.NewGuid());

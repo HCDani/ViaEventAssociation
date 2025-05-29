@@ -15,6 +15,10 @@ using ViaEventAssociation.Core.Application.Commands.GuestNS;
 using ViaEventAssociation.Core.Application.Handlers.GuestNS;
 using ViaEventAssociation.Core.Application.Commands.LocationNS;
 using ViaEventAssociation.Core.Application.Handlers.LocationNS;
+using ViaEventAssociation.Core.Application.Commands.EventGuestParticipation;
+using ViaEventAssociation.Core.Application.Handlers.EventGuestParticipation;
+using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation.Contracts;
+using ViaEventAssociation.Infrastructure.Persistence.Contracts;
 
 
 namespace ViaEventAssociation.Core.Application.AppEntry {
@@ -23,12 +27,14 @@ namespace ViaEventAssociation.Core.Application.AppEntry {
         private readonly ILocationRepository locationRepository;
         private readonly IGuestRepository guestRepository;
         private readonly IUnitOfWork unitOfWork;
+        private readonly EventParticipantsContract eventParticipantsContract;
 
         public CommandDispatcher(EFCDbContext context) {
             eventRepository = new EventRepository(context);
             locationRepository = new LocationRepository(context);
             guestRepository = new GuestRepository(context);
             unitOfWork = new UnitOfWork(context);
+            eventParticipantsContract = new EventParticipantsContract(context);
         }
         public Task<Result<TCommand>> DispatchAsync<TCommand>(TCommand command) {
            Type serviceType = typeof(ICommandHandler<TCommand>);
@@ -72,6 +78,12 @@ namespace ViaEventAssociation.Core.Application.AppEntry {
                     break;
                 case Type t when t == typeof(ICommandHandler<GetLocationByIdCommand>):
                     handler = (ICommandHandler<TCommand>)new GetLocationByIdHandler(locationRepository, unitOfWork);
+                    break;
+                case Type t when t == typeof(ICommandHandler<CreateEventParticipationCommand>):
+                    handler = (ICommandHandler<TCommand>)new CreateEventParticipationHandler(guestRepository,eventRepository, eventParticipantsContract, eventParticipantsContract, unitOfWork);
+                    break;
+                case Type t when t == typeof(ICommandHandler<UpdateEventParticipationStatusCommand>):
+                    handler = (ICommandHandler<TCommand>)new UpdateEventParticipationStatusHandler(eventParticipantsContract, unitOfWork);
                     break;
                 // Add more cases for other command handlers as needed
                 default:

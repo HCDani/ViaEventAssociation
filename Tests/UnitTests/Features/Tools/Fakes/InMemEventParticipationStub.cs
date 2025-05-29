@@ -7,7 +7,7 @@ using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation;
 using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation.Contracts;
 
 namespace UnitTests.Features.Tools.Fakes {
-    public class InMemEventParticipationStub : IGetEventParticipants, IDeleteEventParticipant, IStoreEventParticipation {
+    public class InMemEventParticipationStub : IGetEventParticipants, IStoreEventParticipation {
         List<EventParticipation> eventGuestParticipations = new List<EventParticipation>();
         public InMemEventParticipationStub() {
         }
@@ -16,12 +16,8 @@ namespace UnitTests.Features.Tools.Fakes {
             return Task.CompletedTask;
         }
 
-        public void DeleteParticipant(Guid guestId, Guid eventId) {
-            eventGuestParticipations.RemoveAll(ep => ep.Guest.Id == guestId && ep.Event.Id == eventId);
-        }
-
-        public List<EventParticipation> GetParticipants(Guid eventId) {
-            return eventGuestParticipations.Where(ep => ep.Event.Id == eventId).ToList();
+        public Task<List<EventParticipation>> GetParticipants(Guid eventId) {
+            return Task.FromResult(eventGuestParticipations.Where(ep => ep.Event.Id == eventId).ToList());
         }
         public void Clear() {
             eventGuestParticipations.Clear();

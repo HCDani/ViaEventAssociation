@@ -21,12 +21,12 @@ namespace ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation {
         private EventParticipation(Guid id) : base(id) {
         }
 
-        public static Result<EventParticipation> Create(Guid id, Guest guest, VEvent vEvent, ParticipationStatus participationStatus, IGetEventParticipants eventParticipants) {
+        public static async Task<Result<EventParticipation>> Create(Guid id, Guest guest, VEvent vEvent, ParticipationStatus participationStatus, IGetEventParticipants eventParticipants) {
             if (guest == null) return new Result<EventParticipation>(151, "Guest cannot be null.");
             if (vEvent == null) return new Result<EventParticipation>(152, "Event cannot be null.");
             if (vEvent.Status == EventStatus.Cancelled) return new Result<EventParticipation>(157, "Guest cannot participate in a cancelled event.");
             if (vEvent.Visibility == Visibility.Private && participationStatus != ParticipationStatus.Invited) return new Result<EventParticipation>(158, "Guest cannot participate in a private event.");
-            List<EventParticipation> participations = eventParticipants.GetParticipants(vEvent.Id);
+            List<EventParticipation> participations = await eventParticipants.GetParticipants(vEvent.Id);
             if (participations.FindAll(participant => participant.Guest.Id == guest.Id).Count()>0){
                 return new Result<EventParticipation>(153, "Guest is already participating in the event.");
             }
@@ -39,23 +39,23 @@ namespace ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation {
             
             return new Result<EventParticipation>(new EventParticipation(id) { ParticipationStatus = participationStatus, Guest = guest, Event = vEvent });
         }
-        public Result<EventParticipation> UpdateStatus(ParticipationStatus status, IGetEventParticipants eventParticipants) {
-            if (Event.Status == EventStatus.Cancelled) return new Result<EventParticipation>(157, "Guest cannot participate in a cancelled event.");
-            if (Event.Status == EventStatus.Ready) return new Result<EventParticipation>(161, "The event is not ready to be joined to.");
-            if (status == ParticipationStatus.Invited) return new Result<EventParticipation>(160, "Cannot set Participation status to invited.");
-            if (Event.Status == EventStatus.Active && Event.Duration.From < SystemTimeHolder.SystemTime.GetCurrentDateTime()) return new Result<EventParticipation>(156, "Guest cannot change participation in an already active event.");
-            List<EventParticipation> participations = eventParticipants.GetParticipants(Event.Id);
+        public async Task<Result<ParticipationStatus>> UpdateStatus(ParticipationStatus status, IGetEventParticipants eventParticipants) {
+            if (Event.Status == EventStatus.Cancelled) return new Result<ParticipationStatus>(157, "Guest cannot participate in a cancelled event.");
+            if (Event.Status == EventStatus.Ready) return new Result<ParticipationStatus>(161, "The event is not ready to be joined to.");
+            if (status == ParticipationStatus.Invited) return new Result<ParticipationStatus>(160, "Cannot set Participation status to invited.");
+            if (Event.Status == EventStatus.Active && Event.Duration.From < SystemTimeHolder.SystemTime.GetCurrentDateTime()) return new Result<ParticipationStatus>(156, "Guest cannot change participation in an already active event.");
+            List<EventParticipation> participations = await eventParticipants.GetParticipants(Event.Id);
             EventParticipation? participant = participations.Find(participant => participant.Guest.Id == Guest.Id);
-            if (participant == null) return new Result<EventParticipation>(151, "Guest cannot be null.");
-            if(status == ParticipationStatus.Declined && ParticipationStatus != ParticipationStatus.Invited) return new Result<EventParticipation>(162, "Guest can only decline an invitation.");
-            if (status == ParticipationStatus.Cancelled && ParticipationStatus != ParticipationStatus.Participating) return new Result<EventParticipation>(163, "Guest can only cancel a participation.");
+            if (participant == null) return new Result<ParticipationStatus>(151, "Guest cannot be null.");
+            if(status == ParticipationStatus.Declined && ParticipationStatus != ParticipationStatus.Invited) return new Result<ParticipationStatus>(162, "Guest can only decline an invitation.");
+            if (status == ParticipationStatus.Cancelled && ParticipationStatus != ParticipationStatus.Participating) return new Result<ParticipationStatus>(163, "Guest can only cancel a participation.");
             int participationCount = participations.FindAll(participant => participant.ParticipationStatus == ParticipationStatus.Participating).Count();
             int? maxNumberOfGuests = Event.MaxNumberOfGuests.Value;
             if (participationCount == maxNumberOfGuests) {
-                return new Result<EventParticipation>(155, "The event is full.");
+                return new Result<ParticipationStatus>(155, "The event is full.");
             }
             ParticipationStatus = status;
-            return new Result<EventParticipation>(this);
+            return new Result<ParticipationStatus>(ParticipationStatus);
         }
     }
 }

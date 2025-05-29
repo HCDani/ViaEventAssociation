@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation.Contracts {
     public interface IGetEventParticipants {
-        public List<EventParticipation> GetParticipants(Guid eventId);
+        public Task<List<EventParticipation>> GetParticipants(Guid eventId);
     }
 }

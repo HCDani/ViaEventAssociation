@@ -8,7 +8,7 @@ using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation;
 using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation.Contracts;
 
 namespace ViaEventAssociation.Infrastructure.Persistence.Contracts {
-    public class EventParticipantsContract : IGetEventParticipants, IDeleteEventParticipant, IStoreEventParticipation {
+    public class EventParticipantsContract : IGetEventParticipants, IStoreEventParticipation {
         protected readonly EFCDbContext context;
 
         public EventParticipantsContract(EFCDbContext context) {
@@ -20,11 +20,7 @@ namespace ViaEventAssociation.Infrastructure.Persistence.Contracts {
             await context.SaveChangesAsync();
         }
 
-        public void DeleteParticipant(Guid guestId, Guid eventId) {
-            context.Set<EventParticipation>().RemoveRange(context.Set<EventParticipation>().Where(participant => participant.Event.Id == eventId && participant.Guest.Id == guestId));
-        }
-
-        public List<EventParticipation> GetParticipants(Guid eventId) {
+        public async Task<List<EventParticipation>> GetParticipants(Guid eventId) {
             return context.Set<EventParticipation>().Where(participant => participant.Event.Id == eventId).ToList();
         }
     }
