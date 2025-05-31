@@ -7,17 +7,15 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
-using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
-using ViaEventAssociation.Core.Domain.Aggregates.GuestNS;
-using ViaEventAssociation.Core.Domain.Aggregates.GuestNS.Values;
-using ViaEventAssociation.Core.Domain.Aggregates.LocationNS;
-using ViaEventAssociation.Core.Domain.Aggregates.LocationNS.Values;
-using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation;
-using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation.Values;
+using ViaEventAssociation.Infrastructure.Queries.Models;
+using ViaEventAssociation.Core.Domain.Services;
 using ViaEventAssociation.Core.Tools.OperationResult;
 using ViaEventAssociation.Infrastructure.Persistence.Contracts;
 using ViaEventAssociation.Infrastructure.Persistence.Repositories;
+using ViaEventAssociation.Core.Domain.Common.Bases;
+using ViaEventAssociation.Infrastructure.Queries.Persistence;
+using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
+using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation.Values;
 
 namespace IntegrationTests.RepositoryTests {
     [TestClass]
@@ -26,9 +24,8 @@ namespace IntegrationTests.RepositoryTests {
         [TestMethod]
         public async Task TestJSONLoader() {
             // Arrange
-            using (var ctx = GlobalUsings.CreateDbContext(Dbname)) {
-                GlobalUsings.InitializeDatabase(ctx);
-                LocationRepository locationRepository = new(ctx);
+            using (var ctx = ScaffoldingDbContextFactory.CreateDbContext(Dbname)) {
+                ScaffoldingDbContextFactory.InitializeDatabase(ctx);
                 string locationFileName = "../../../testdata/Locations.json";
                 string locationJsonString = File.ReadAllText(locationFileName);
                 JsonArray locationsNode = JsonNode.Parse(locationJsonString)!.AsArray();
@@ -50,12 +47,17 @@ namespace IntegrationTests.RepositoryTests {
 
                     // Create Location object from JSON
                     // Guid id, LocationName newName, MaxCapacity newCapacity, Availability newAvailability, Address newAddress
-                    Result<Location> location = Location.Create(Guid.Parse(locationNode["Id"]!.ToString()!),
-                        LocationName.Create(locationNode["Name"]!.ToString()!).payLoad,
-                        MaxCapacity.Create(int.Parse(locationNode["MaxCapacity"]!.ToString()!)).payLoad,
-                        Availability.Create(start, end).payLoad,
-                        Address.Create(1000, "City", "street", 69).payLoad);
-                    await locationRepository.CreateAsync(location.payLoad);
+                    Location location = new Location(){Id = Guid.Parse(locationNode["Id"]!.ToString()!),
+                       LocationName = locationNode["Name"]!.ToString()!,
+                        MaxCapacity = int.Parse(locationNode["MaxCapacity"]!.ToString()!),
+                        AvailabilityFrom = start,
+                        AvailabilityTo = end,
+                        PostalCode = 1000,
+                        City = "City",
+                        Street = "street",
+                        HouseNumber = 69};
+                    await ctx.Set<Location>().AddAsync(location);
+                    await ctx.SaveChangesAsync();
                 }
                 
                 string eventFileName = "../../../testdata/Events.json";
@@ -67,8 +69,8 @@ namespace IntegrationTests.RepositoryTests {
                     string endStr = eventNode["End"]!.ToString()!;
                     DateTime start, end;
 
-                    bool startOk = DateTime.TryParseExact(startStr, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out start);
-                    bool endOk = DateTime.TryParseExact(endStr, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out end);
+                    bool startOk = DateTime.TryParseExact(startStr, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out start);
+                    bool endOk = DateTime.TryParseExact(endStr, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out end);
 
                     if (!startOk || !endOk) {
                         // Handle the invalid date case: skip, log, or use a fallback value
@@ -76,51 +78,78 @@ namespace IntegrationTests.RepositoryTests {
                         continue; // Skip this entry
                     }
                     // Id, Title,Description, Status, Visibility, Start(year-month-day(2 digits), hour:minutes(2 digits)), End, MaxGuests, LocationId
-                    VEvent vEvent = VEvent.Create(Guid.Parse(eventNode["Id"]!.ToString()!));
-                    vEvent.UpdateTitle(Title.Create(eventNode["Title"]!.ToString()!).payLoad);
-                    vEvent.UpdateDescription(Description.Create(eventNode["Description"]!.ToString()!).payLoad);
                     string statusString = eventNode["Status"]!.ToString()!;
-                    if (Enum.TryParse<EventStatus>(statusString, out EventStatus eventStatus)) {
-                        vEvent.UpdateStatus(eventStatus);
+                    if (!Enum.TryParse<EventStatus>(statusString, out EventStatus eventStatus)) {
+                        eventStatus = EventStatus.Draft; // Default to Draft if parsing fails
                     }
-                    string visibilityString = eventNode["Status"]!.ToString()!;
-                    if (Enum.TryParse<Visibility>(visibilityString, out Visibility eventVisibility)) {
-                        vEvent.UpdateVisibility(eventVisibility);
+                    string visibilityString = eventNode["Visibility"]!.ToString()!;
+                    if (!Enum.TryParse<Visibility>(visibilityString, out Visibility eventVisibility)) {
+                        eventVisibility = Visibility.Private; // Default to Private if parsing fails
                     }
-                    vEvent.UpdateDuration(EventDuration.Create(start, end).payLoad);
-                    vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(int.Parse(eventNode["MaxNumberOfGuests"]!.ToString()!)).payLoad);
-                    vEvent.UpdateLocation(eventNode["LocationId"] != null ? locationRepository.GetAsync(Guid.Parse(eventNode["LocationId"]!.ToString()!)).Result : null);
-
-                    GuestRepository guestRepository = new(ctx);
-                    string guestFileName = "../../../testdata/Guests.json";
-                    string guestJsonString = File.ReadAllText(guestFileName);
-                    JsonArray guestsNode = JsonNode.Parse(guestJsonString)!.AsArray();
-                    for (int j = 0; j < guestsNode.Count; j++) {
-                        JsonObject guestNode = guestsNode[j]!.AsObject();
-                        // Id, FirstName, LastName, Email, ProfilePictureUrl
-                        Result<Guest> guest = Guest.RegisterGuest(Guid.Parse(guestNode["Id"]!.ToString()!),
-                            GuestName.Create(guestNode["FirstName"]!.ToString()!, guestNode["LastName"]!.ToString()!).payLoad,
-                            Email.Create(guestNode["Email"]!.ToString()!).payLoad,
-                            ProfilePictureUrl.Create(guestNode["ProfilePictureUrl"]!.ToString()!).payLoad);
-                        await guestRepository.CreateAsync(guest.payLoad);
-                    }
+                    Event vEvent = new Event() { Id = Guid.Parse(eventNode["Id"]!.ToString()!),
+                        Title = eventNode["Title"]!.ToString()!,
+                        Description = eventNode["Description"]!.ToString()!,
+                        Status = (int)eventStatus,
+                        Visibility = (int)eventVisibility,
+                        DurationFrom = start,
+                        DurationTo = end,
+                        MaxNumberOfGuests = int.Parse(eventNode["MaxGuests"]!.ToString()!),
+                        LocationId = eventNode["LocationId"] != null ? Guid.Parse(eventNode["LocationId"]!.ToString()!) : (Guid?)null
+                    };
+                    await ctx.Set<Event>().AddAsync(vEvent);
+                    await ctx.SaveChangesAsync();
                 }
+                string guestFileName = "../../../testdata/Guests.json";
+                string guestJsonString = File.ReadAllText(guestFileName);
+                JsonArray guestsNode = JsonNode.Parse(guestJsonString)!.AsArray();
+                for (int j = 0; j < guestsNode.Count; j++) {
+                    JsonObject guestNode = guestsNode[j]!.AsObject();
+                    // Id, FirstName, LastName, Email, ProfilePictureUrl
+                    Guest guest = new Guest() {
+                        Id = Guid.Parse(guestNode["Id"]!.ToString()!),
+                        FirstName = guestNode["FirstName"]!.ToString()!,
+                        LastName = guestNode["LastName"]!.ToString()!,
+                        Email = guestNode["Email"]!.ToString()!,
+                        Ppurl = guestNode["Url"]!.ToString()!
+                    };
+                    await ctx.Set<Guest>().AddAsync(guest);
+                    await ctx.SaveChangesAsync();
+                }
+
                 string invitationFileName = "../../../testdata/Invitations.json";
                 string invitationJsonString = File.ReadAllText(invitationFileName);
                 JsonArray invitationsNode = JsonNode.Parse(invitationJsonString)!.AsArray();
-                EventParticipantsContract eventParticipants = new EventParticipantsContract(ctx);
                 for (int i = 0; i < invitationsNode.Count; i++) {
                     JsonObject invitationNode = invitationsNode[i]!.AsObject();
-                    // Id, EventId, GuestId, ParticipationStatus
+                    // EventId, GuestId, Status
                     string participationStatusString = invitationNode["Status"]!.ToString()!;
-                    if (Enum.TryParse<ParticipationStatus>(participationStatusString, out ParticipationStatus participationStatus)) {
-                        EventParticipation eventParticipation1 = EventParticipation.Create(Guid.NewGuid(),
-                            Guid.Parse(invitationNode["EventId"]!.ToString()!),
-                            Guid.Parse(invitationNode["GuestId"]!.ToString()!),
-                            participationStatus,eventParticipants.GetParticipants()).payLoad;
+                    if (!Enum.TryParse<ParticipationStatus>(participationStatusString, out ParticipationStatus participationStatus)) {
+                        participationStatus = ParticipationStatus.Invited; // Default to Invited if parsing fails
                     }
+                    EventParticipation eventParticipation = new EventParticipation() {
+                        Id = Guid.NewGuid(),
+                        GuestId = Guid.Parse(invitationNode["GuestId"]!.ToString()!),
+                        EventId = Guid.Parse(invitationNode["EventId"]!.ToString()!),
+                        ParticipationStatus = (int)participationStatus
+                    };
+                    await ctx.Set<EventParticipation>().AddAsync(eventParticipation);
+                    await ctx.SaveChangesAsync();
 
-
+                }
+                string participationFileName = "../../../testdata/Participations.json";
+                string participationJsonString = File.ReadAllText(participationFileName);
+                JsonArray participationsNode = JsonNode.Parse(participationJsonString)!.AsArray();
+                for (int i = 0; i < participationsNode.Count; i++) {
+                    JsonObject participationNode = participationsNode[i]!.AsObject();
+                    // EventId, GuestId,
+                    EventParticipation eventParticipation = new EventParticipation() {
+                        Id = Guid.NewGuid(),
+                        GuestId = Guid.Parse(participationNode["GuestId"]!.ToString()!),
+                        EventId = Guid.Parse(participationNode["EventId"]!.ToString()!),
+                        ParticipationStatus = 0 // 0 is the default value for ParticipationStatus.Participating
+                    };
+                    await ctx.Set<EventParticipation>().AddAsync(eventParticipation);
+                    await ctx.SaveChangesAsync();
                 }
             }
         }
