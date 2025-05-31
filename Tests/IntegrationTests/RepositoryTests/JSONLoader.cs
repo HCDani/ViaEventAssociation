@@ -9,9 +9,14 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
 using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
+using ViaEventAssociation.Core.Domain.Aggregates.GuestNS;
+using ViaEventAssociation.Core.Domain.Aggregates.GuestNS.Values;
 using ViaEventAssociation.Core.Domain.Aggregates.LocationNS;
 using ViaEventAssociation.Core.Domain.Aggregates.LocationNS.Values;
+using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation;
+using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation.Values;
 using ViaEventAssociation.Core.Tools.OperationResult;
+using ViaEventAssociation.Infrastructure.Persistence.Contracts;
 using ViaEventAssociation.Infrastructure.Persistence.Repositories;
 
 namespace IntegrationTests.RepositoryTests {
@@ -70,37 +75,53 @@ namespace IntegrationTests.RepositoryTests {
                         Console.WriteLine($"Invalid date(s): {startStr}, {endStr} -- skipping entry.");
                         continue; // Skip this entry
                     }
-                    // Id, Title, Status, Visibility, Start(year-month-day(2 digits), hour:minutes(2 digits)), End, MaxGuests, LocationId
+                    // Id, Title,Description, Status, Visibility, Start(year-month-day(2 digits), hour:minutes(2 digits)), End, MaxGuests, LocationId
                     VEvent vEvent = VEvent.Create(Guid.Parse(eventNode["Id"]!.ToString()!));
                     vEvent.UpdateTitle(Title.Create(eventNode["Title"]!.ToString()!).payLoad);
                     vEvent.UpdateDescription(Description.Create(eventNode["Description"]!.ToString()!).payLoad);
+                    string statusString = eventNode["Status"]!.ToString()!;
+                    if (Enum.TryParse<EventStatus>(statusString, out EventStatus eventStatus)) {
+                        vEvent.UpdateStatus(eventStatus);
+                    }
+                    string visibilityString = eventNode["Status"]!.ToString()!;
+                    if (Enum.TryParse<Visibility>(visibilityString, out Visibility eventVisibility)) {
+                        vEvent.UpdateVisibility(eventVisibility);
+                    }
                     vEvent.UpdateDuration(EventDuration.Create(start, end).payLoad);
                     vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(int.Parse(eventNode["MaxNumberOfGuests"]!.ToString()!)).payLoad);
-                    vEvent.UpdateStatus(EventStatus.Create(int.Parse(eventNode["Status"]!.ToString()!)).payLoad);
+                    vEvent.UpdateLocation(eventNode["LocationId"] != null ? locationRepository.GetAsync(Guid.Parse(eventNode["LocationId"]!.ToString()!)).Result : null);
 
-
-                    eventNode["Title"]!.ToString()!,
-                        eventNode["Description"]!.ToString()!,
-                        start,
-                        end,
-                        int.Parse(eventNode["Status"]!.ToString()!),
-                        int.Parse(eventNode["Visibility"]!.ToString()!),
-                        int.Parse(eventNode["MaxNumberOfGuests"]!.ToString()!),
-                        null // Assuming Location is not provided in the JSON
-                    /*VEvent vEvent = new VEvent(
-                        Guid.Parse(eventNode["Id"]!.ToString()!),
-                        eventNode["Title"]!.ToString()!,
-                        eventNode["Description"]!.ToString()!,
-                        DateTime.Parse(eventNode["DurationFrom"]!.ToString()!),
-                        DateTime.Parse(eventNode["DurationTo"]!.ToString()!),
-                        int.Parse(eventNode["Status"]!.ToString()!),
-                        int.Parse(eventNode["Visibility"]!.ToString()!),
-                        int.Parse(eventNode["MaxNumberOfGuests"]!.ToString()!),
-                        null // Assuming Location is not provided in the JSON
-                    );
-                    ctx.Add(vEvent);*/
+                    GuestRepository guestRepository = new(ctx);
+                    string guestFileName = "../../../testdata/Guests.json";
+                    string guestJsonString = File.ReadAllText(guestFileName);
+                    JsonArray guestsNode = JsonNode.Parse(guestJsonString)!.AsArray();
+                    for (int j = 0; j < guestsNode.Count; j++) {
+                        JsonObject guestNode = guestsNode[j]!.AsObject();
+                        // Id, FirstName, LastName, Email, ProfilePictureUrl
+                        Result<Guest> guest = Guest.RegisterGuest(Guid.Parse(guestNode["Id"]!.ToString()!),
+                            GuestName.Create(guestNode["FirstName"]!.ToString()!, guestNode["LastName"]!.ToString()!).payLoad,
+                            Email.Create(guestNode["Email"]!.ToString()!).payLoad,
+                            ProfilePictureUrl.Create(guestNode["ProfilePictureUrl"]!.ToString()!).payLoad);
+                        await guestRepository.CreateAsync(guest.payLoad);
+                    }
                 }
+                string invitationFileName = "../../../testdata/Invitations.json";
+                string invitationJsonString = File.ReadAllText(invitationFileName);
+                JsonArray invitationsNode = JsonNode.Parse(invitationJsonString)!.AsArray();
+                EventParticipantsContract eventParticipants = new EventParticipantsContract(ctx);
+                for (int i = 0; i < invitationsNode.Count; i++) {
+                    JsonObject invitationNode = invitationsNode[i]!.AsObject();
+                    // Id, EventId, GuestId, ParticipationStatus
+                    string participationStatusString = invitationNode["Status"]!.ToString()!;
+                    if (Enum.TryParse<ParticipationStatus>(participationStatusString, out ParticipationStatus participationStatus)) {
+                        EventParticipation eventParticipation1 = EventParticipation.Create(Guid.NewGuid(),
+                            Guid.Parse(invitationNode["EventId"]!.ToString()!),
+                            Guid.Parse(invitationNode["GuestId"]!.ToString()!),
+                            participationStatus,eventParticipants.GetParticipants()).payLoad;
+                    }
 
+
+                }
             }
         }
     }
