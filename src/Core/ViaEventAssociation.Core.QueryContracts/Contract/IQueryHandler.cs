@@ -1,5 +1,5 @@
 ﻿namespace ViaEventAssociation.Core.QueryContracts.Contract {
-    public class IQueryHandler {
-
+    public interface IQueryHandler<TQuery,TAnswer> {
+        public Task<TAnswer> HandleAsync(TQuery query);
     }
 }
