@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using UnitTests.Features.Tools.Fakes;
-using ViaEventAssociation.Core.Domain.Services;
+using ViaEventAssociation.Core.Tools.SystemTime;
 using ViaEventAssociation.Core.QueryApplication.QueryDispatching;
 using ViaEventAssociation.Core.QueryContracts.Queries;
 using ViaEventAssociation.Infrastructure.Queries.Persistence;
@@ -17,11 +17,17 @@ namespace IntegrationTests.QueryTests {
     public class ViewQueryTests {
         private const string Dbname = "../../TestViewQueries.db";
 
+        [ClassInitialize]
+        public static void Initialize(TestContext _1) {
+            using (var ctx = ScaffoldingDbContextFactory.CreateDbContext(Dbname)) {
+                JSONLoader.SeedDatabaseFromJson(ctx).Wait();
+            }
+        }
+
         [TestMethod]
         public async Task TestViewQueries() {
             // Arrange
             using (var ctx = ScaffoldingDbContextFactory.CreateDbContext(Dbname)) {
-                await JSONLoader.SeedDatabaseFromJson(ctx);
                 IQueryDispatcher queryDispatcher = new QueryDispatcher(ctx);
 
                 // Act
@@ -40,7 +46,6 @@ namespace IntegrationTests.QueryTests {
         public async Task TestGetUnpublishedEvents() {
             // Arrange
             using (var ctx = ScaffoldingDbContextFactory.CreateDbContext(Dbname)) {
-                await JSONLoader.SeedDatabaseFromJson(ctx);
                 IQueryDispatcher queryDispatcher = new QueryDispatcher(ctx);
                 // Act
                 UnpublishedEvents.Query query = new UnpublishedEvents.Query();
@@ -56,11 +61,9 @@ namespace IntegrationTests.QueryTests {
         [TestMethod]
         public async Task TestGetUpcomingEvents() {
             // Arrange
-            FakeSystemTime fakeSystemTime = new FakeSystemTime();
-            fakeSystemTime.DateTime = new DateTime(2024, 01, 01, 9, 0, 0);
+            FakeSystemTime fakeSystemTime = new FakeSystemTime(new DateTime(2024, 01, 01, 9, 0, 0));
             SystemTimeHolder.SetSystemTime(fakeSystemTime);
             using (var ctx = ScaffoldingDbContextFactory.CreateDbContext(Dbname)) {
-                await JSONLoader.SeedDatabaseFromJson(ctx);
                 IQueryDispatcher queryDispatcher = new QueryDispatcher(ctx);
                 // Act
                 UpcomingEvents.Query query = new UpcomingEvents.Query(Guid.Parse("503457fb-dd03-40f6-8e89-79aee51a8736"));

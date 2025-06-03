@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnitTests.Features.Tools.Fakes;
 using ViaEventAssociation.Core.Domain.Aggregates.EventNS;
 using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
 using ViaEventAssociation.Core.Domain.Aggregates.LocationNS;
 using ViaEventAssociation.Core.Tools.OperationResult;
+using ViaEventAssociation.Core.Tools.SystemTime;
 
 namespace UnitTests.Features.Event
 {
@@ -17,6 +19,8 @@ namespace UnitTests.Features.Event
         [Fact]
         public void UpdateDuration_WithValidData()
         {
+            FakeSystemTime fakeSystemTime = new FakeSystemTime(new DateTime(2024, 11, 01, 9, 0, 0));
+            SystemTimeHolder.SetSystemTime(fakeSystemTime);
             // Arrange S1
             Title title = Title.Create("Event Title").payLoad;
             VEvent vEvent = VEvent.Create(Guid.NewGuid());

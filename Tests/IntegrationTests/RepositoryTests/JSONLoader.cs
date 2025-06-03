@@ -8,7 +8,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using ViaEventAssociation.Infrastructure.Queries.Models;
-using ViaEventAssociation.Core.Domain.Services;
+using ViaEventAssociation.Core.Tools.SystemTime;
 using ViaEventAssociation.Core.Tools.OperationResult;
 using ViaEventAssociation.Infrastructure.Persistence.Contracts;
 using ViaEventAssociation.Infrastructure.Persistence.Repositories;

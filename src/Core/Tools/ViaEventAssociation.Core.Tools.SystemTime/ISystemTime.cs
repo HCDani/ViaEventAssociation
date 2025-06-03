@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ViaEventAssociation.Core.Domain.Services {
+namespace ViaEventAssociation.Core.Tools.SystemTime {
     public interface ISystemTime {
         public DateTime GetCurrentDateTime();
     }

@@ -6,13 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using ViaEventAssociation.Core.QueryContracts.Contract;
 using ViaEventAssociation.Core.QueryContracts.Queries;
+using ViaEventAssociation.Core.Tools.SystemTime;
 using ViaEventAssociation.Infrastructure.Queries.Persistence;
 
 namespace ViaEventAssociation.Infrastructure.Queries.Queries {
     public class GetUpcomingEventsHandler(ScaffoldingDbinitContext ctx) : IQueryHandler<UpcomingEvents.Query, UpcomingEvents.Answer> {
         public async Task<UpcomingEvents.Answer> HandleAsync(UpcomingEvents.Query query) {
             List<UpcomingEvents.UpEvent> upEvents = await ctx.Events
-                .Where(e => e.Id == query.EventId && e.DurationFrom > DateTime.Now)
+                .Where(e => e.DurationFrom > SystemTimeHolder.SystemTime.GetCurrentDateTime())
                 .Select(e => new UpcomingEvents.UpEvent(
                     e.Id,
                     e.Title,
@@ -21,7 +22,7 @@ namespace ViaEventAssociation.Infrastructure.Queries.Queries {
                     e.DurationTo,
                     e.MaxNumberOfGuests,
                     e.EventParticipations.Where(ep => ep.ParticipationStatus == 0).Count(),
-                    (int)e.Visibility))
+                    e.Visibility))
                 .ToListAsync();
             return new UpcomingEvents.Answer(upEvents);
         }

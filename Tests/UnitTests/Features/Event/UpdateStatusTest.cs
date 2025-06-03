@@ -9,7 +9,7 @@ using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
 using ViaEventAssociation.Core.Domain.Aggregates.LocationNS;
 using ViaEventAssociation.Core.Tools.OperationResult;
 using UnitTests.Features.Tools.Fakes;
-using ViaEventAssociation.Core.Domain.Services;
+using ViaEventAssociation.Core.Tools.SystemTime;
 
 namespace UnitTests.Features.Event
 {
@@ -19,8 +19,7 @@ namespace UnitTests.Features.Event
         [Fact]
         public void UpdateStatusTest_Ready() {
             // Arrange S1
-            FakeSystemTime fakeSystemTime = new FakeSystemTime();
-            fakeSystemTime.DateTime = new DateTime(2026, 05, 27, 9, 0, 0);
+            FakeSystemTime fakeSystemTime = new FakeSystemTime(new DateTime(2026, 05, 27, 9, 0, 0));
             SystemTimeHolder.SetSystemTime(fakeSystemTime);
             Title title = Title.Create("Event Title").payLoad;
             VEvent vEvent = VEvent.Create(Guid.NewGuid());

@@ -10,7 +10,7 @@ using ViaEventAssociation.Core.Domain.Aggregates.GuestNS;
 using ViaEventAssociation.Core.Tools.OperationResult;
 using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation.Values;
 using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation.Contracts;
-using ViaEventAssociation.Core.Domain.Services;
+using ViaEventAssociation.Core.Tools.SystemTime;
 
 namespace ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation {
     public class EventParticipation : Entity<Guid> {

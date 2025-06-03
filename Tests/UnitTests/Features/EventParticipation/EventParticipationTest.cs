@@ -16,13 +16,16 @@ using System.Runtime;
 using Moq;
 using UnitTests.Features.Tools.Fakes;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using ViaEventAssociation.Core.Domain.Services;
+using ViaEventAssociation.Core.Tools.SystemTime;
 
 namespace UnitTests.Features.EventParticipationTest {
     public class EventParticipationTest {
         // ID 11 use case.
         [Fact]
         public async Task GuestParticipatesEvent() {
+            FakeSystemTime fakeSystemTime = new FakeSystemTime(new DateTime(2026, 05, 27, 9, 0, 0));
+            SystemTimeHolder.SetSystemTime(fakeSystemTime);
+
             // Arrange S1
             Guid id = Guid.NewGuid();
             GuestName guestName = GuestName.Create("John", "Doe").payLoad;
@@ -119,29 +122,27 @@ namespace UnitTests.Features.EventParticipationTest {
             // Assert F2
             Assert.Equal(155, eventParticipationResultF2F.resultCode);
             // Arrange F3 This only works if the current time is after 8 am and before midnight by 2 seconds.
-                FakeSystemTime fakeSystemTime = new FakeSystemTime();
-                fakeSystemTime.DateTime = new DateTime(2026, 05, 27, 9, 0, 0);
-                SystemTimeHolder.SetSystemTime(fakeSystemTime);
-                vEvent = VEvent.Create(Guid.NewGuid());
-                vEvent.UpdateTitle(Title.Create("Event Title").payLoad);
-                vEvent.UpdateVisibility(Visibility.Public);
-                vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
-                vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
-                vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(10).payLoad);
-                Result<EventDuration> newDurationF3 = EventDuration.Create(new DateTime(2026, 05, 27, 10, 0, 0), new DateTime(2026, 05, 27, 11, 0, 0));
-                vEvent.UpdateDuration(newDurationF3.payLoad);
-                Assert.Equal(0, vEvent.UpdateDuration(newDurationF3.payLoad).resultCode);
-                Result<EventStatus> eventStatusResultF3A = vEvent.UpdateStatus(EventStatus.Ready);
-                Assert.Equal(0, eventStatusResultF3A.resultCode);
-                Result<EventStatus> eventStatusResultF3B = vEvent.UpdateStatus(EventStatus.Active);
-                Assert.Equal(0, eventStatusResultF3B.resultCode);
-                fakeSystemTime.DateTime = new DateTime(2026, 05, 27, 10, 01, 0);
+            fakeSystemTime.DateTime = new DateTime(2026, 05, 27, 9, 0, 0);
+            vEvent = VEvent.Create(Guid.NewGuid());
+            vEvent.UpdateTitle(Title.Create("Event Title").payLoad);
+            vEvent.UpdateVisibility(Visibility.Public);
+            vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
+            vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
+            vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(10).payLoad);
+            Result<EventDuration> newDurationF3 = EventDuration.Create(new DateTime(2026, 05, 27, 10, 0, 0), new DateTime(2026, 05, 27, 11, 0, 0));
+            vEvent.UpdateDuration(newDurationF3.payLoad);
+            Assert.Equal(0, vEvent.UpdateDuration(newDurationF3.payLoad).resultCode);
+            Result<EventStatus> eventStatusResultF3A = vEvent.UpdateStatus(EventStatus.Ready);
+            Assert.Equal(0, eventStatusResultF3A.resultCode);
+            Result<EventStatus> eventStatusResultF3B = vEvent.UpdateStatus(EventStatus.Active);
+            Assert.Equal(0, eventStatusResultF3B.resultCode);
+            fakeSystemTime.DateTime = new DateTime(2026, 05, 27, 10, 01, 0);
 
             // Act F3
             Result<EventParticipation> eventParticipationResultF3 = await EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants);
 
-                // Assert F3
-                Assert.Equal(156, eventParticipationResultF3.resultCode);
+            // Assert F3
+            Assert.Equal(156, eventParticipationResultF3.resultCode);
 
             // Arrange F4
             vEvent = VEvent.Create(Guid.NewGuid());
@@ -169,8 +170,7 @@ namespace UnitTests.Features.EventParticipationTest {
         [Fact]
         public async Task GuestCancelsParticipation() {
             // Arrange S1
-            FakeSystemTime fakeSystemTime = new FakeSystemTime();
-            fakeSystemTime.DateTime = new DateTime(2026, 05, 27, 9, 0, 0);
+            FakeSystemTime fakeSystemTime = new FakeSystemTime(new DateTime(2026, 05, 27, 9, 0, 0));
             SystemTimeHolder.SetSystemTime(fakeSystemTime);
             VEvent vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateTitle(Title.Create("Event Title").payLoad);
@@ -197,6 +197,8 @@ namespace UnitTests.Features.EventParticipationTest {
             await mockEventParticipants.CreateAsync(eventParticipationResultS1A.payLoad);
 
             // Act S1
+            Result<ParticipationStatus> eventParticipationStatusResultS1AP = await eventParticipationResultS1A.payLoad.UpdateStatus(ParticipationStatus.Participating, mockEventParticipants);
+            Assert.Equal(0, eventParticipationStatusResultS1AP.resultCode);
             Result<ParticipationStatus> eventParticipationStatusResultS1A = await eventParticipationResultS1A.payLoad.UpdateStatus(ParticipationStatus.Cancelled, mockEventParticipants);
 
             // Assert S1
@@ -224,6 +226,9 @@ namespace UnitTests.Features.EventParticipationTest {
         // ID 13 use case.
         [Fact]
         public async Task GuestIsInvitedToEvent() {
+            FakeSystemTime fakeSystemTime = new FakeSystemTime(new DateTime(2026, 05, 27, 9, 0, 0));
+            SystemTimeHolder.SetSystemTime(fakeSystemTime);
+
             // Arrange S1
             VEvent vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateTitle(Title.Create("Event Title").payLoad);
@@ -313,8 +318,7 @@ namespace UnitTests.Features.EventParticipationTest {
         [Fact]
         public async Task GuestAcceptsInvitation() {
             // Arrange S1
-            FakeSystemTime fakeSystemTime = new FakeSystemTime();
-            fakeSystemTime.DateTime = new DateTime(2026, 05, 27, 9, 0, 0);
+            FakeSystemTime fakeSystemTime = new FakeSystemTime(new DateTime(2026, 05, 27, 9, 0, 0));
             SystemTimeHolder.SetSystemTime(fakeSystemTime);
             VEvent vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateTitle(Title.Create("Event Title").payLoad);
@@ -445,8 +449,7 @@ namespace UnitTests.Features.EventParticipationTest {
         [Fact]
         public async Task GuestDeclinesInvitation() {
             // Arrange S1
-            FakeSystemTime fakeSystemTime = new FakeSystemTime();
-            fakeSystemTime.DateTime = new DateTime(2026, 05, 27, 9, 0, 0);
+            FakeSystemTime fakeSystemTime = new FakeSystemTime(new DateTime(2026, 05, 27, 9, 0, 0));
             SystemTimeHolder.SetSystemTime(fakeSystemTime);
             VEvent vEvent = VEvent.Create(Guid.NewGuid());
             vEvent.UpdateTitle(Title.Create("Event Title").payLoad);

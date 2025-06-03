@@ -7,7 +7,7 @@ using ViaEventAssociation.Core.Domain.Aggregates.LocationNS;
 using ViaEventAssociation.Core.Domain.Entities.EventGuestParticipation;
 
 namespace ViaEventAssociation.Infrastructure.Persistence {
-    public class EFCDbContext(DbContextOptions options) : DbContext(options) {
+    public class EFCDbContext(DbContextOptions<EFCDbContext> options) : DbContext(options) {
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         }

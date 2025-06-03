@@ -1,8 +1,8 @@
 ﻿using ViaEventAssociation.Core.Domain.Aggregates.EventNS.Values;
 using ViaEventAssociation.Core.Domain.Aggregates.LocationNS;
 using ViaEventAssociation.Core.Domain.Common.Bases;
-using ViaEventAssociation.Core.Domain.Services;
 using ViaEventAssociation.Core.Tools.OperationResult;
+using ViaEventAssociation.Core.Tools.SystemTime;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.EventNS {
     public class VEvent : AggregateRoot<Guid> {

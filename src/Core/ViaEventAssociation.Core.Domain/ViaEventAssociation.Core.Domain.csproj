@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Tools\ViaEventAssociation.Core.Tools.OperationResult\ViaEventAssociation.Core.Tools.OperationResult.csproj" />
+      <ProjectReference Include="..\Tools\ViaEventAssociation.Core.Tools.SystemTime\ViaEventAssociation.Core.Tools.SystemTime.csproj" />
     </ItemGroup>
 
 </Project>
