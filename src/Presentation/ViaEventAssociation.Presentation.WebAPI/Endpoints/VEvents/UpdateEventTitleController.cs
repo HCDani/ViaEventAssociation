@@ -7,7 +7,7 @@ namespace ViaEventAssociation.Presentation.WebAPI.Endpoints.VEvents {
     public class UpdateEventTitleController([FromServices] ICommandDispatcher dispatcher) : ApiEndpoint
          .WithRequest<UpdateEventTitleRequest>.WithResponse<UpdateEventTitleResponse> {
 
-        [HttpPost("event/update/title")]
+        [HttpPost("event/update_title")]
         public override async Task<ActionResult<UpdateEventTitleResponse>> HandleAsync(UpdateEventTitleRequest request) {
             Result<UpdateEventTitleCommand> commandResult = await dispatcher.DispatchAsync(UpdateEventTitleCommand.Create(request.EventId.ToString(), request.Title).payLoad);
             if (commandResult.resultCode != 0) {

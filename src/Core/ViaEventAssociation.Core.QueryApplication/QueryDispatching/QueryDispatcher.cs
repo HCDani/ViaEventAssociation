@@ -15,9 +15,9 @@ namespace ViaEventAssociation.Core.QueryApplication.QueryDispatching {
             context = _context;
         }
 
-        public Task<TAnswer> DispatchAsync<TQuery,TAnswer>(IQuery<TQuery,TAnswer> query) {
+        public Task<TAnswer> DispatchAsync<TQuery, TAnswer>(IQuery<TQuery, TAnswer> query) {
             Type serviceType = typeof(IQuery<TQuery, TAnswer>);
-            IQueryHandler<TQuery,TAnswer> handler = null;
+            IQueryHandler<TQuery, TAnswer> handler = null;
             switch (serviceType) {
                 case Type t when t == typeof(IQuery<GuestEvents.Query, GuestEvents.Answer>):
                     handler = (IQueryHandler<TQuery, TAnswer>)new GuestEventsHandler(context);
