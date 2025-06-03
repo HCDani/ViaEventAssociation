@@ -10,4 +10,14 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Endpoints\Queries\" />
+    <Folder Include="Endpoints\Guests\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\ViaEventAssociation.Core.Application\ViaEventAssociation.Core.Application.csproj" />
+    <ProjectReference Include="..\..\Core\ViaEventAssociation.Core.QueryApplication\ViaEventAssociation.Core.QueryApplication.csproj" />
+  </ItemGroup>
+
 </Project>

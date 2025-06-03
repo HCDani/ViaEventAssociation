@@ -119,28 +119,29 @@ namespace UnitTests.Features.EventParticipationTest {
             // Assert F2
             Assert.Equal(155, eventParticipationResultF2F.resultCode);
             // Arrange F3 This only works if the current time is after 8 am and before midnight by 2 seconds.
-            if (DateTime.Now.Hour > 8 && DateTime.Now.Hour < 23) {
+                FakeSystemTime fakeSystemTime = new FakeSystemTime();
+                fakeSystemTime.DateTime = new DateTime(2026, 05, 27, 9, 0, 0);
+                SystemTimeHolder.SetSystemTime(fakeSystemTime);
                 vEvent = VEvent.Create(Guid.NewGuid());
                 vEvent.UpdateTitle(Title.Create("Event Title").payLoad);
                 vEvent.UpdateVisibility(Visibility.Public);
                 vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
                 vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
                 vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(10).payLoad);
-                Result<EventDuration> newDurationF3 = EventDuration.Create(DateTime.Now.AddSeconds(1), DateTime.Now.AddHours(1).AddSeconds(3));
+                Result<EventDuration> newDurationF3 = EventDuration.Create(new DateTime(2026, 05, 27, 10, 0, 0), new DateTime(2026, 05, 27, 11, 0, 0));
                 vEvent.UpdateDuration(newDurationF3.payLoad);
                 Assert.Equal(0, vEvent.UpdateDuration(newDurationF3.payLoad).resultCode);
                 Result<EventStatus> eventStatusResultF3A = vEvent.UpdateStatus(EventStatus.Ready);
                 Assert.Equal(0, eventStatusResultF3A.resultCode);
                 Result<EventStatus> eventStatusResultF3B = vEvent.UpdateStatus(EventStatus.Active);
                 Assert.Equal(0, eventStatusResultF3B.resultCode);
-                Thread.Sleep(1500);
+                fakeSystemTime.DateTime = new DateTime(2026, 05, 27, 10, 01, 0);
 
-                // Act F3
-                Result<EventParticipation> eventParticipationResultF3 = await EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants);
+            // Act F3
+            Result<EventParticipation> eventParticipationResultF3 = await EventParticipation.Create(Guid.NewGuid(), guestResult.payLoad, vEvent, ParticipationStatus.Participating, mockEventParticipants);
 
                 // Assert F3
                 Assert.Equal(156, eventParticipationResultF3.resultCode);
-            }
 
             // Arrange F4
             vEvent = VEvent.Create(Guid.NewGuid());

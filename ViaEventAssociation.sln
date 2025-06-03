@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViaEventAssociation.Infrast
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViaEventAssociation.Core.QueryApplication", "src\Core\ViaEventAssociation.Core.QueryApplication\ViaEventAssociation.Core.QueryApplication.csproj", "{AE6FE6B6-0DC3-416E-A41D-05255C779BF2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViaEventAssociation.Presentation.WebAPI", "src\Presentation\ViaEventAssociation.Presentation.WebAPI\ViaEventAssociation.Presentation.WebAPI.csproj", "{997F13D4-5965-4D79-8B4E-B58143388D8B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{AE6FE6B6-0DC3-416E-A41D-05255C779BF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE6FE6B6-0DC3-416E-A41D-05255C779BF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE6FE6B6-0DC3-416E-A41D-05255C779BF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{997F13D4-5965-4D79-8B4E-B58143388D8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{997F13D4-5965-4D79-8B4E-B58143388D8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{997F13D4-5965-4D79-8B4E-B58143388D8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{997F13D4-5965-4D79-8B4E-B58143388D8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,6 +98,7 @@ Global
 		{CCFD2CA4-4D23-4472-BD7E-CCBE26769CC4} = {8E8FDA8E-3A0E-4126-9798-F097D288B21E}
 		{1E17BBF2-5093-403B-A862-E18368CFC22E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{AE6FE6B6-0DC3-416E-A41D-05255C779BF2} = {8E8FDA8E-3A0E-4126-9798-F097D288B21E}
+		{997F13D4-5965-4D79-8B4E-B58143388D8B} = {8702C432-E34F-4C59-B903-9D860BA00BC8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1CEE05F6-7E35-41D1-B75A-825CC163168E}
