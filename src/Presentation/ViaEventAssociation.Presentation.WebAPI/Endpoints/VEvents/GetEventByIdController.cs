@@ -15,9 +15,11 @@ namespace ViaEventAssociation.Presentation.WebAPI.Endpoints.VEvents {
             if (commandResult.resultCode != 0) {
                 return BadRequest(commandResult.errorMessage);
             }
-            return Ok(new GetEventByIdResponse(commandResult.payLoad.VEvent));
+            VEvent? vEvent = commandResult.payLoad.VEvent;
+            return Ok(new GetEventByIdResponse(vEvent?.Title.Value,vEvent?.Description.Value, vEvent?.Duration.From,vEvent?.Duration.To,(int?)vEvent?.Status,
+                (int?)vEvent?.Visibility, vEvent?.MaxNumberOfGuests.Value, vEvent?.Location?.Id));
         }
     }
     public record GetEventByIdRequest(Guid EventId);
-    public record GetEventByIdResponse(VEvent? Event);
+    public record GetEventByIdResponse(string? Title, string? Description, DateTime? From, DateTime? To, int? Status, int? Visibility, int? MaxNumberOfGuests, Guid? LocationId);
 }

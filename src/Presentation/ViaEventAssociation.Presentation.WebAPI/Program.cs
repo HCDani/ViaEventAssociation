@@ -14,18 +14,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<EFCDbContext>(options =>
-    options.UseSqlite("Data Source=../../viaeventassociation.db"));
+    options.UseSqlite("Data Source=../viaeventassociation.db"));
 
 builder.Services.AddDbContext<ScaffoldingDbinitContext>(options =>
-    options.UseSqlite("Data Source=../../viaeventassociation.db"));
+    options.UseSqlite("Data Source=../viaeventassociation.db"));
 
-builder.Services.AddScoped<ICommandDispatcher,CommandDispatcher>();
+builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
 builder.Services.AddScoped<IQueryDispatcher, QueryDispatcher>();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
+using (var scope = app.Services.CreateScope()) {
     var dbContext = scope.ServiceProvider.GetRequiredService<EFCDbContext>();
     dbContext.Database.EnsureCreated();
 }

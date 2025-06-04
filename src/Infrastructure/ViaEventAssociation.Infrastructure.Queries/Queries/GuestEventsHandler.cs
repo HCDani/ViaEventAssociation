@@ -20,7 +20,7 @@ namespace ViaEventAssociation.Infrastructure.Queries.Queries {
                     ep.Event.DurationFrom,
                     ep.Event.DurationTo,
                     ep.Event.MaxNumberOfGuests,
-                    ep.Event.EventParticipations.Where(ep => ep.ParticipationStatus==0).Count()))
+                    ep.Event.EventParticipations.Count(ep => ep.ParticipationStatus==0)))
                 .ToListAsync();
             return new GuestEvents.Answer(Events);
         }

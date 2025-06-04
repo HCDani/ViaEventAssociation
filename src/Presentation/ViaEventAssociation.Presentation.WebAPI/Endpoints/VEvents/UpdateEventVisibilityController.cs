@@ -13,9 +13,9 @@ namespace ViaEventAssociation.Presentation.WebAPI.Endpoints.VEvents {
             if (commandResult.resultCode != 0) {
                 return BadRequest(commandResult.errorMessage);
             }
-            return Ok(new UpdateEventVisibilityResponse(commandResult.payLoad.Visibility));
+            return Ok(new UpdateEventVisibilityResponse((int)commandResult.payLoad.Visibility));
         }
     }
     public record UpdateEventVisibilityRequest(Guid EventId, string Visibility);
-    public record UpdateEventVisibilityResponse(Enum Visibility);
+    public record UpdateEventVisibilityResponse(int? Visibility);
 }

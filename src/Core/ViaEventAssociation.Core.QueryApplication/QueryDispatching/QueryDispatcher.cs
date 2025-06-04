@@ -28,6 +28,12 @@ namespace ViaEventAssociation.Core.QueryApplication.QueryDispatching {
                 case Type t when t == typeof(IQuery<UpcomingEvents.Query, UpcomingEvents.Answer>):
                     handler = (IQueryHandler<TQuery, TAnswer>)new GetUpcomingEventsHandler(context);
                     break;
+                case Type t when t == typeof(IQuery<GuestInfo.Query, GuestInfo.Answer>):
+                    handler = (IQueryHandler<TQuery, TAnswer>)new GetGuestInfoHandler(context);
+                    break;
+                case Type t when t == typeof(IQuery<EventInfo.Query, EventInfo.Answer>):
+                    handler = (IQueryHandler<TQuery, TAnswer>)new GetEventInfoHandler(context);
+                    break;
                 // Add more cases for other query handlers as needed
                 default:
                     throw new NotImplementedException($"No handler implemented for query type {serviceType.Name}");

@@ -13,9 +13,9 @@ namespace ViaEventAssociation.Presentation.WebAPI.Endpoints.VEvents {
             if (commandResult.resultCode != 0) {
                 return BadRequest(commandResult.errorMessage);
             }
-            return Ok(new UpdateEventStatusResponse(commandResult.payLoad.Status));
+            return Ok(new UpdateEventStatusResponse((int)commandResult.payLoad.Status));
         }
     }
     public record UpdateEventStatusRequest(Guid EventId, string Status);
-    public record UpdateEventStatusResponse(Enum Status);
+    public record UpdateEventStatusResponse(int? Status);
 }

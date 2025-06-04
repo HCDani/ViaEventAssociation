@@ -18,57 +18,61 @@ namespace UnitTests.Features.Event
         // ID 8 use case.
         [Fact]
         public void UpdateStatusTest_Ready() {
-            // Arrange S1
-            FakeSystemTime fakeSystemTime = new FakeSystemTime(new DateTime(2026, 05, 27, 9, 0, 0));
-            SystemTimeHolder.SetSystemTime(fakeSystemTime);
-            Title title = Title.Create("Event Title").payLoad;
-            VEvent vEvent = VEvent.Create(Guid.NewGuid());
-            vEvent.UpdateTitle(title);
-            vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
-            vEvent.UpdateVisibility(Visibility.Private);
-            vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
-            vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
-            vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(10).payLoad);
-            // Act S1
-            Result<EventStatus> resultStatusS1 = vEvent.UpdateStatus(EventStatus.Ready);
-            // Assert S1
-            Assert.Equal(0, resultStatusS1.resultCode);
-            Assert.Equal(EventStatus.Ready, vEvent.Status);
-            // Arrange F1
-            vEvent = VEvent.Create(Guid.NewGuid());
-            vEvent.UpdateTitle(title);
-            // Act F1
-            Result<EventStatus> resultStatusF1 = vEvent.UpdateStatus(EventStatus.Ready);
-            // Assert F1
-            Assert.Equal(4, resultStatusF1.resultCode);
-            Assert.Equal(EventStatus.Draft, vEvent.Status);
-            // Arrange F2
-            Result<EventStatus> resultStatusF2A = vEvent.UpdateStatus(EventStatus.Cancelled);
-            // Act F2
-            Result<EventStatus> resultStatusF2B = vEvent.UpdateStatus(EventStatus.Ready);
-            // Assert F2
-            Assert.Equal(2, resultStatusF2B.resultCode);
+            try {
+                // Arrange S1
+                FakeSystemTime.FakeSystemTimeMutex.WaitOne();
+                FakeSystemTime.SetSystemTime(new DateTime(2026, 05, 27, 9, 0, 0));
+                Title title = Title.Create("Event Title").payLoad;
+                VEvent vEvent = VEvent.Create(Guid.NewGuid());
+                vEvent.UpdateTitle(title);
+                vEvent.UpdateDuration(EventDuration.Create(new DateTime(2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 11, 11, 11)).payLoad);
+                vEvent.UpdateVisibility(Visibility.Private);
+                vEvent.UpdateDescription(Description.Create("Nullam tempor lacus nisl, eget tempus").payLoad);
+                vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
+                vEvent.UpdateMaxNumberOfGuests(MaxNumberOfGuests.Create(10).payLoad);
+                // Act S1
+                Result<EventStatus> resultStatusS1 = vEvent.UpdateStatus(EventStatus.Ready);
+                // Assert S1
+                Assert.Equal(0, resultStatusS1.resultCode);
+                Assert.Equal(EventStatus.Ready, vEvent.Status);
+                // Arrange F1
+                vEvent = VEvent.Create(Guid.NewGuid());
+                vEvent.UpdateTitle(title);
+                // Act F1
+                Result<EventStatus> resultStatusF1 = vEvent.UpdateStatus(EventStatus.Ready);
+                // Assert F1
+                Assert.Equal(4, resultStatusF1.resultCode);
+                Assert.Equal(EventStatus.Draft, vEvent.Status);
+                // Arrange F2
+                Result<EventStatus> resultStatusF2A = vEvent.UpdateStatus(EventStatus.Cancelled);
+                // Act F2
+                Result<EventStatus> resultStatusF2B = vEvent.UpdateStatus(EventStatus.Ready);
+                // Assert F2
+                Assert.Equal(2, resultStatusF2B.resultCode);
 
-            // Arrange F3
-            vEvent = VEvent.Create(Guid.NewGuid());
-            vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
-            vEvent.UpdateTitle(title);
-            Result<EventDuration> newDurationF10 = EventDuration.Create(new DateTime (2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 10, 0, 0));
-            Assert.Equal(0, vEvent.UpdateDuration(newDurationF10.payLoad).resultCode);
-            fakeSystemTime.DateTime = new DateTime(2026, 10, 31, 9, 0, 1);
-            // Act F3
-            Result<EventStatus> resultStatusF3 = vEvent.UpdateStatus(EventStatus.Ready);
+                // Arrange F3
+                vEvent = VEvent.Create(Guid.NewGuid());
+                vEvent.UpdateLocation(Location.Create(Guid.NewGuid()).payLoad);
+                vEvent.UpdateTitle(title);
+                Result<EventDuration> newDurationF10 = EventDuration.Create(new DateTime (2026, 10, 31, 9, 0, 0), new DateTime(2026, 10, 31, 10, 0, 0));
+                Assert.Equal(0, vEvent.UpdateDuration(newDurationF10.payLoad).resultCode);
+                FakeSystemTime.SetSystemTime(new DateTime(2026, 10, 31, 9, 0, 1));
+                // Act F3
+                Result<EventStatus> resultStatusF3 = vEvent.UpdateStatus(EventStatus.Ready);
 
-            // Assert F3
-            Assert.Equal(38, resultStatusF3.resultCode);
+                // Assert F3
+                Assert.Equal(38, resultStatusF3.resultCode);
 
 
-            // Arrange F4
-            vEvent = VEvent.Create(Guid.NewGuid());
-            // Act F4
-            Result<EventStatus> resultStatusF4 = vEvent.UpdateStatus(EventStatus.Ready);
-            // Assert F4
-            Assert.Equal(3, resultStatusF4.resultCode);
+                // Arrange F4
+                vEvent = VEvent.Create(Guid.NewGuid());
+                // Act F4
+                Result<EventStatus> resultStatusF4 = vEvent.UpdateStatus(EventStatus.Ready);
+                // Assert F4
+                Assert.Equal(3, resultStatusF4.resultCode);
+            } finally {
+                FakeSystemTime.FakeSystemTimeMutex.ReleaseMutex();
+            }
         }
 
         // ID 9 use case.
